@@ -1,0 +1,406 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block head %}
+    <link href="{% static 'css/profile.css' %}" rel="stylesheet">
+  <link href="{% static 'css/feeds.css' %}" rel="stylesheet">
+  <script src="{% static 'js/feeds.js' %}"></script>
+  <style>
+   @media only screen and (max-width: 500px){
+    ul.stream li a img.user {width: 40px;}
+    ul.stream li div.post {margin-left:30px; padding-left:5px;}
+    .feed-container {
+    padding-left: 8px;
+    padding-right: 8px;}}
+  @media only screen and (max-width: 400px){
+    ul.stream li a img.user {width: 30px;}
+    ul.stream li div.post {margin-left:30px; padding-left:5px;}
+  }
+  @media only screen and (max-width: 500px){
+.action-list {
+padding-left:0px;
+padding-right:0px;
+}
+}
+  </style>
+<style>
+    .book-list {
+        position:relative;
+        width:100%;
+
+    }
+    .book-list:after {
+        content:"";
+        display:block;
+        padding-bottom:158%;
+
+    }
+    .list {
+        width:80%;
+
+    }
+    .image {
+		position: absolute;
+		background-image: url('/media/{{page_user.profile.avatar}}');
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		width: 100%;
+		height: 100%;
+	}
+	.no-image {
+		position: absolute;
+		background-image: url('/static/icons/no-image.jpg');
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		width: 100%;
+		height: 100%;
+	}
+	.square {
+		position: relative;
+		width: 100%;
+	}
+
+	.square:after {
+		content: "";
+		display: block;
+		padding-bottom: 100%;
+	}
+
+</style>
+
+{% endblock head %}
+
+{% block content %}
+
+  <div class="clearer w3-round" style="margin-top:20px;">
+    <div style="margin: 0 auto; width:100%; max-width:700px;" >
+    	{% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}	
+		  {% if actions %}
+          <ul style="list-style:none; margin-bottom:0;" class="w3-white stream border-bottom" id="actions">
+              {% include 'actions/partial_action.html' %}
+          </ul>
+		  {% else %}
+		  <div class="w3-white border-all" style="padding:20px; min-height:200px;">
+			  <h2 class="w3-center">Welcome to Libercen</h2>
+			  <p>It seems you have not followed anyone or your friends are not that active.</p>
+			  <p>Try using our search form to find more of your friends or to discover amazing books.</p>
+		  </div>
+		  <div style="padding-top: 20px;" class="w3-white border-left border-right">
+		  		<h4 class="w3-center">Suggested users you may want to follow:</h4>
+		  		{% for user in users %}
+				    <div class="border-bottom" style="width:100%;">
+				        <div class="clearer" style="padding:10px">
+				            <div class="square w3-left border-all" style="border-radius: 50px; float:left; width:50px;">
+				                <div style="border-radius: 50px; float:left; background-image: url('{% if user.profile.avatar %}/media/{{user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
+				            </div>
+				            <div class="w3-left" style="font-size:18px; margin-top:8px; float:left; margin-left:8px;">
+				                <a href="/{{user.username}}" >{{ user.username }}</a>
+				            </div>
+				            {% if request.user == user %}
+				            {% else %}
+				            <div class="w3-right">
+				                {% with total_following=user.following.count %}
+				                <a href="#" style="color:white; border-radius:5px; margin-left:4px; margin-bottom:11px;" data-id="{{ user.id }}" data-action="{% if request.user in user.followers.all %}un{% endif %}follow" class="w3-btn custom-{% if request.user in user.followers.all %}green{% else %}blue{% endif %} follow button">
+				                    {% if request.user not in user.followers.all %}
+				                    Follow
+				                    {% else %}
+				                    Following
+				                    {% endif %}
+				                </a>
+				                {% endwith %}
+				            </div>
+				            {% endif %}
+				        </div>
+				    </div>
+				    {% empty %}
+				    <h1>Empty</h1>
+				{% endfor %}	
+		  </div>
+		  {% endif %}
+    </div>
+  </div>
+
+
+
+{% endblock %}
+
+{% block domready %}
+	$('a.follow').click(function(e){
+		e.preventDefault();
+		var div = $(this).closest("div");
+		$.post('{% url "user_follow" %}',
+			{
+				id: $(this).data('id'),
+				action: $(this).data('action')
+			},
+			function(data){
+				if (data['status'] == 'ok') {
+					var previous_action = $('a.follow', div).data('action');
+					// toggle data-action
+					$('a.follow', div).data('action',
+					previous_action == 'follow' ? 'unfollow' : 'follow');
+					// toggle link text
+					$('a.follow', div).text(
+					previous_action == 'follow' ? 'Following' : 'Follow');
+					// update total followers
+					var previous_followers = parseInt(
+					$('span.count-followers .total', div).text());
+					$('span.count-followers .total', div).text(previous_action == 'follow' ?
+					previous_followers + 1 : previous_followers - 1);
+					if (previous_action == 'follow') {
+						$('a.follow', div).removeClass('custom-blue');
+						$('a.follow', div).addClass('custom-green');
+					}
+          			else {
+						$('a.follow', div).removeClass('custom-green');
+						$('a.follow', div).addClass('custom-blue');
+					}
+				}
+			}
+		);
+	});
+    var page = 1;
+    var empty_page = false;
+    var block_request = false;
+
+    $(window).scroll(function() {
+        var margin = $(document).height() - $(window).height() - 200;
+        if  ($(window).scrollTop() > margin && empty_page == false && block_request == false) {
+		    block_request = true;
+		    page += 1;
+		    $.get('?page=' + page, function(data) {
+		        if(data == '')
+		        {
+		            empty_page = true;
+		        }
+		        else {
+                    block_request = false;
+                    $('#actions').append(data);
+    	        }
+            });
+    	}
+    });
+	$("ul.review-ul").on("click", ".like", function () {
+		var li = $(this).closest("li");
+		var review = $(li).attr("review-id");
+		var csrf = $(li).attr("csrf");
+		$.ajax({
+		  url: '/r/like/',
+		  data: {
+			'review': review,
+			'csrfmiddlewaretoken': csrf
+		  },
+		  type: 'post',
+		  cache: false,
+		  success: function (data) {
+			if ($(".like", li).hasClass("unlike")) {
+			  $(".like", li).removeClass("unlike");
+			  $(".like .fa", li).removeClass("fa-thumbs-up")
+			  $(".like .fa", li).addClass("fa-thumbs-o-up");
+			  $(".like .text", li).text("Like");
+			}
+			else {
+			  $(".like .fa", li).addClass("fa-thumbs-up");
+			  $(".like .fa", li).removeClass("fa-thumbs-o-up");
+			  $(".like", li).addClass("unlike");
+			  $(".like .text", li).text("Unlike");
+			}
+			$(".like-count", li).text(data);
+			$(".like .fa", li).addClass(data);
+			$(".like .fa", li).removeClass(data);
+		  }
+		});
+		return false;
+	  });
+	$("ul.post-ul").on("click", ".like", function () {
+		var li = $(this).closest("li");
+		var post = $(li).attr("post-id");
+		var csrf = $(li).attr("csrf");
+		$.ajax({
+		  url: '/p/like/',
+		  data: {
+			'post': post,
+			'csrfmiddlewaretoken': csrf
+		  },
+		  type: 'post',
+		  cache: false,
+		  success: function (data) {
+			if ($(".like", li).hasClass("unlike")) {
+			  $(".like", li).removeClass("unlike");
+			  $(".like .fa", li).removeClass("fa-thumbs-up")
+			  $(".like .fa", li).addClass("fa-thumbs-o-up");
+			  $(".like .text", li).text("Like");
+			}
+			else {
+			  $(".like .fa", li).addClass("fa-thumbs-up");
+			  $(".like .fa", li).removeClass("fa-thumbs-o-up");
+			  $(".like", li).addClass("unlike");
+			  $(".like .text", li).text("Unlike");
+			}
+			$(".like-count", li).text(data);
+			$(".like .fa", li).addClass(data);
+			$(".like .fa", li).removeClass(data);
+		  }
+		});
+		return false;
+	  });
+    $('button.fav').click(function(e){
+		e.preventDefault();
+		var div = $(this).closest("div");
+		$.post('{% url "add_fav" %}',
+			{
+				id: $(this).data('id'),
+				action: $(this).data('action')
+			},
+			function(data){
+				if (data['status'] == 'ok') {
+					var previous_action = $('button.fav', div).data('action');
+					// toggle data-action
+					$('button.fav', div).data('action',
+					previous_action == 'fav' ? 'unfav' : 'fav');
+					// toggle link text
+					$('button.fav', div).text(
+					previous_action == 'fav' ? 'Remove from favourites' : 'Add to favourites');
+					// update total followers
+					var previous_favers = parseInt(
+					$('span.count .total', div).text());
+					$('span.count .total', div).text(previous_action == 'fav' ?
+					previous_favers + 1 : previous_favers - 1);
+					if (previous_action == 'fav') {
+						$('button.fav', div).removeClass('custom-green');
+						$('button.fav', div).addClass('custom-red');
+					}
+          			else {
+						$('button.fav', div).removeClass('custom-red');
+						$('button.fav', div).addClass('custom-green');
+					}
+
+				}
+			}
+		);
+	});
+		function post_comment(post, csrf, li) {
+			$.ajax({
+				url : "/p/comment/",
+				type : "POST",
+				data : {
+					'comment' : $('.comment-text', li).val(),
+					'post' : post,
+					'csrfmiddlewaretoken': csrf
+				},
+
+				// handle a successful response
+				success : function(json) {
+					$('.comment-text', li).val(''); // remove the value from the input
+					console.log(json); // log the returned json to the console
+					if (json.useravatar) {
+						var avatarUrl = json.useravatar
+					}
+					else {
+						var avatarUrl = "/static/icons/no-image.jpg"
+					}
+					$('.comments-list', li).prepend('<div class="clearer" comment-id="' + json.commentpk + '" csrf="{{ csrf_token }}"><div style="padding:10px; float:left; width:97%;" class="clearer"><div class="square w3-round" style="float:left; border: 1px solid grey; width:5%;"><div style="float:left; background-image: url(' + avatarUrl + ');" class="w3-round small-profile"></div></div><div class="w3-white" style="width:94%; padding:10px; float:right; border-radius:15px;"><p><a href="/' + json.user + '/" >' + json.user + ' </a>' + json.comment + '</p></div></div><button class="pcomment-delete w3-btn w3-left"><i class="fa fa-times"></i></button></div>');
+				},
+				// handle a non-successful response
+				error : function(xhr,errmsg,err) {
+					$('.results', li).html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+						" <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+					console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+				}
+			});
+		};
+		$('.pcommentForm').on('submit', function(event){
+			event.preventDefault();
+			var li = $(this).closest("li");
+			var post = $(li).attr("post-id");
+			var csrf = $(li).attr("csrf");
+			post_comment(post, csrf, li);
+		});
+
+		  $(".pcomment-delete").on("click", function () {
+			var div = $(this).closest("div");
+			var comment = $(div).attr("comment-id");
+			var csrf = $(div).attr("csrf");
+			$.ajax({
+			  url: '/p/comment/delete/',
+			  data: {
+				'comment': comment,
+				'csrfmiddlewaretoken': csrf
+			  },
+			  type: 'post',
+			  cache: false,
+			  success: function (data) {
+				$(div).fadeOut(400, function () {
+				  $(div).remove();
+				});
+			  }
+			});
+		  });
+		function review_comment(review, csrf, li) {
+			$.ajax({
+				url : "/r/comment/",
+				type : "POST",
+				data : {
+					'comment' : $('.comment-text', li).val(),
+					'review' : review,
+					'csrfmiddlewaretoken': csrf
+				},
+
+				// handle a successful response
+				success : function(json) {
+					$('.comment-text', li).val(''); // remove the value from the input
+					console.log(json); // log the returned json to the console
+					if (json.useravatar) {
+						var avatarUrl = json.useravatar
+					}
+					else {
+						var avatarUrl = "/static/icons/no-image.jpg"
+					}
+					$('.comments-list', li).prepend('<div class="clearer" comment-id="' + json.commentpk + '" csrf="{{ csrf_token }}"><div style="padding:10px; float:left; width:97%;" class="clearer"><div class="square w3-round" style="float:left; border: 1px solid grey; width:5%;"><div style="float:left; background-image: url(' + avatarUrl + ');" class="w3-round small-profile"></div></div><div class="w3-white" style="width:94%; padding:10px; float:right; border-radius:15px;"><p><a href="/' + json.user + '/" >' + json.user + ' </a>' + json.comment + '</p></div></div><button class="rcomment-delete w3-btn w3-left"><i class="fa fa-times"></i></button></div>');
+				},
+				// handle a non-successful response
+				error : function(xhr,errmsg,err) {
+					$('.results', li).html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+						" <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+					console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+				}
+			});
+		};
+		$('.rcommentForm').on('submit', function(event){
+			event.preventDefault();
+			var li = $(this).closest("li");
+			var review = $(li).attr("review-id");
+			var csrf = $(li).attr("csrf");
+			review_comment(review, csrf, li);
+		});
+
+		$(".rcomment-delete").on("click", function () {
+			var div = $(this).closest("div");
+			var comment = $(div).attr("comment-id");
+			var csrf = $(div).attr("csrf");
+			$.ajax({
+			  url: '/r/comment/delete/',
+			  data: {
+				'comment': comment,
+				'csrfmiddlewaretoken': csrf
+			  },
+			  type: 'post',
+			  cache: false,
+			  success: function (data) {
+				$(div).fadeOut(400, function () {
+				  $(div).remove();
+				});
+			  }
+			});
+		  });
+{% endblock %}

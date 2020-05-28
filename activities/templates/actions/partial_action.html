@@ -1,0 +1,231 @@
+
+{% load i18n %}
+{% load humanize %}
+
+{% for action in actions %}
+{% if action.target %}
+<li {% if action.target.name %} book-id="{{ action.target.pk }}" csrf="{{ csrf_token }}"{%endif%}>
+    <div class="feed-container">
+        <div class="border-top border-left border-right post" style="padding:15px;">
+            {% if action.user == user %}
+            <span class="fa fa-remove remove-feed" title="{% trans 'Click to remove this feed' %}"></span>
+            {% endif %}
+            <a href="{% url 'profile' action.user.username %}">
+                {% if action.target.user.profile.avatar %}
+                <div style="width:50px;">
+                    <div class="square" style="margin-right: 13px; margin-top: -7px; margin-bottom: 8px; float:left;">
+                        <div class="small-profile border" style="border-radius:100px; background-image:url('/media/{{action.target.user.profile.avatar}}');">
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div style="width:50px;">
+                    <div class="square" style="margin-right: 13px; margin-top: -7px; margin-bottom: 8px; float:left;">
+                        <div class="no-image border" style="border-radius:100px;">
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </a>
+            <p><a style="font-size:24px;" href="{% url 'profile' action.user.username %}">{{ action.user.username }}</a> {{action.verb}} <small>{{ action.date|naturaltime }}</small></p>
+            {% if action.target.name %}
+            {% with book=action.target %}
+            <div class="clearer" style="">
+                <div style="padding:2px; margin:0 auto;" class="list">
+                    <div style="width:100%;" class="clearer w3-white w3-left border-all">
+                        <div class="book-list" style="width:50%; float:left;">
+                            <a href="{% url 'book' book.slug %}">
+                                <div style="width:100%; height:100%; position:absolute; background-image: url('/media/{{book.cover}}'); background-position: center top; background-repeat: no-repeat; background-size:cover;">
+                                </div>
+                            </a>
+                        </div>
+                        <div style="margin-left:5px; padding:3px; float:left; width:48%;">
+                            <a href="{% url 'book' book.slug %}"><b>{{ book.name }}</b></a>
+                            <p><i>by {{ book.author }}</i></p>
+                            {% with total_users_liked=book.profile_set.count %}
+                            <span class="count">
+                                <span class="total">{{ total_users_liked }}</span>
+                                user{{ total_users_liked|pluralize }} liked
+                            </span>
+                            <button data-id="{{ book.id }}" data-action="{% if book in request.user.profile.fav_books.all %}un{% endif %}fav" style="color:white; font-size:12px;" class="w3-round w3-btn custom-{% if book in request.user.profile.fav_books.all %}red{% else %}green{% endif %} fav button">
+                                {% if book not in request.user.profile.fav_books.all %}
+                                Add to favourites
+                                {% else %}
+                                Remove from favourites
+                                {% endif %}
+                            </button>
+                            {% endwith %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+
+        {% elif action.target.post %}
+            {% with post=action.target %}
+            <p style="margin-top:20px;">{{ post.post|safe|linebreaks }}</p>
+            <div class="clearer review-bottom">
+                <ul class="w3-ul post-ul">
+                    <li post-id="{{post.pk}}" csrf="{{csrf_token}}" style="padding:0!important;">
+                        <div class="interaction">
+                            {% if user in post.get_likers %}
+                            <a href="#" style="padding:0; box-shadow:none; width:25px; margin-right:0; font-size:17px; color:#e80435;" class="w3-xlarge w3-btn w3-white like unlike">
+                                <i style=" color:#3b5998;" class="fa fa-thumbs-up"></i>
+                            </a>
+                            <span class="text"></span>
+                            <span class="small-size like-count">{{ post.likes }}</span><span class="small-size like-name"> like{{ post.likes|pluralize }}</span>
+                            {% else %}
+                            <a href="#" style="padding:0; width:25px; margin-right:0; box-shadow:none; font-size:17px; color:#e80435;" class="w3-xlarge w3-btn w3-white like">
+                                <i style=" color:#3b5998;" class="fa fa-thumbs-o-up"></i>
+                            </a>
+                            <span class="text"></span>
+                            <span class="like-count small-size">{{ post.likes }}</span><span class="small-size like-name"> like{{ post.likes|pluralize }}</span>
+                            {% endif %}
+                            <button style="padding:0; box-shadow:none; width:27px; margin-right:0;" class="w3-btn w3-white comment" data-toggle="collapse" data-target="#collapsePComment{{post.pk}}" aria-expanded="false" aria-controls="collapsePComment">
+                                <i style="color:#3b5998" class="fa fa-comment-o w3-xlarge"></i>
+                            </button>
+                            <span class="small-size">Comments</span>
+                            <span style="padding-left:3px;" class="small-size comment-count">{{ post.comments.all.count }}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            {% endwith %}
+        {% else %}
+            {% with review=action.target %}
+            <p style="margin-top:20px;">{{ review.review|safe|linebreaks }}</p>
+                {% with book=action.target.book %}
+                    <div class="clearer" style="">
+                        <div style="padding:2px; margin:0 auto;" class="list">
+                            <div style="width:100%;" class="clearer w3-white w3-left border-all">
+                                <div class="book-list" style="width:50%; float:left;">
+                                    <a href="{% url 'book' book.slug %}">
+                                        <div style="width:100%; height:100%; position:absolute; background-image: url('/media/{{book.cover}}'); background-position: center top; background-repeat: no-repeat; background-size:cover;">
+                                        </div>
+                                    </a>
+                                </div>
+                                <div style="margin-left:5px; padding:3px; float:left; width:48%;">
+                                    <a href="{% url 'book' book.slug %}"><b>{{ book.name }}</b></a>
+                                    <p><i>by {{ book.author }}</i></p>
+                                    {% with total_users_liked=book.profile_set.count %}
+                                    <span class="count">
+                                        <span class="total">{{ total_users_liked }}</span>
+                                        user{{ total_users_liked|pluralize }} liked
+                                    </span>
+                                    <button data-id="{{ book.id }}" data-action="{% if book in request.user.profile.fav_books.all %}un{% endif %}fav" style="color:white; font-size:12px;" class="w3-round w3-btn custom-{% if book in request.user.profile.fav_books.all %}red{% else %}green{% endif %} fav button">
+                                        {% if book not in request.user.profile.fav_books.all %}
+                                        Add to favourites
+                                        {% else %}
+                                        Remove from favourites
+                                        {% endif %}
+                                    </button>
+                                    {% endwith %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            {% endwith %}
+            <div class="clearer review-bottom">
+                <ul class="w3-ul review-ul">
+                    <li review-id="{{review.pk}}" csrf="{{csrf_token}}" style="padding:0!important;">
+                        <div class="interaction">
+                            {% if user in review.get_likers %}
+                            <a href="#" style="padding:0; box-shadow:none; width:25px; margin-right:0; font-size:17px; color:#e80435;" class="w3-xlarge w3-btn w3-white like unlike">
+                                <i style=" color:#3b5998;" class="fa fa-thumbs-up"></i>
+                            </a>
+                            <span class="text"></span>
+                            <span class="small-size like-count">{{ review.likes }}</span><span class="small-size like-name"> like{{ review.likes|pluralize }}</span>
+                            {% else %}
+                            <a href="#" style="padding:0; width:25px; margin-right:0; box-shadow:none; font-size:17px; color:#e80435;" class="w3-xlarge w3-btn w3-white like">
+                                <i style=" color:#3b5998;" class="fa fa-thumbs-o-up"></i>
+                            </a>
+                            <span class="text"></span>
+                            <span class="like-count small-size">{{ review.likes }}</span><span class="small-size like-name"> like{{ review.likes|pluralize }}</span>
+                            {% endif %}
+                            <button style="padding:0; box-shadow:none; width:27px; margin-right:0;" class="w3-btn w3-white comment" data-toggle="collapse" data-target="#collapseRComment{{review.pk}}" aria-expanded="false" aria-controls="collapseRComment">
+                                <i style="color:#3b5998" class="fa fa-comment-o w3-xlarge"></i>
+                            </button>
+                            <span class="small-size">Comments</span>
+                            <span style="padding-left:3px;" class="small-size comment-count">{{ review.comments.all.count }}</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            {% endwith %}
+
+        {% endif %}
+        </div>
+        {% if action.target.name %}
+        {% elif action.target.post %}
+            {% with post=action.target %}
+            <div class="collapse" id="collapsePComment{{post.pk}}" style="background-color:#f2f3f5;">
+                <ul class="comment-ul">
+                    <li class="border-all" post-id="{{post.pk}}" csrf="{{csrf_token}}">
+                        <div style="padding:15px;">
+                            <form role="form" method="post" action="/p/comment/" class="pcommentForm">
+                                {% csrf_token %}
+                                <input type="text" style="width:90%;" class="form-control comment-text input-sm w3-left" placeholder="Write a comment..." pattern=".{5,400}" required name="post" maxlength="400" autocomplete="off">
+                                <input type="submit" style="width:9%;" value="Add" class="w3-right btn btn-primary">
+                                <div class="results"></div>
+                            </form>
+                        </div>
+                        <div style="margin-top:40px; max-height:350px; overflow-y:scroll;" class="comments-list clearer border-top">
+                            {% for comment in post.comments.all %}
+                            <div class="clearer" comment-id="{{ comment.pk }}" csrf="{{ csrf_token }}">
+                                <div style="padding:10px; float:left; width:97%;" class="clearer ">
+                                    <div class="square w3-round" style="float:left; border: 1px solid grey; width:5%;">
+                                        <div style="float:left; background-image: url('{% if comment.user.profile.avatar %}/media/{{comment.user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
+                                    </div>
+                                    <div class="w3-white" style="width:94%; padding:10px; float:right; border-radius:15px;">
+                                        <p><a href="/{{comment.user.username}}/" >{{comment.user.username}} </a>{{ comment.comment }}</p>
+                                    </div>
+                                </div>
+                                {% if request.user == post.user or request.user == comment.user %}
+                                <button class="pcomment-delete w3-btn w3-left"><i class="fa fa-times"></i></button>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            {% endwith %}
+        {% else %}
+            {% with review=action.target %}
+            <div class="collapse" id="collapseRComment{{review.pk}}" style="background-color:#f2f3f5;">
+                <ul class="comment-ul">
+                    <li class="border-all" review-id="{{review.pk}}" csrf="{{csrf_token}}">
+                        <div style="padding:15px;">
+                            <form role="form" method="post" action="/r/comment/" class="rcommentForm">
+                                {% csrf_token %}
+                                <input type="text" style="width:90%;" class="form-control comment-text input-sm w3-left" placeholder="Write a comment..." pattern=".{5,400}" required name="post" maxlength="400" autocomplete="off">
+                                <input type="submit" style="width:9%;" value="Add" class="w3-right btn btn-primary">
+                                <div class="results"></div>
+                            </form>
+                        </div>
+                        <div style="margin-top:40px; max-height:350px; overflow-y:scroll;" class="comments-list clearer border-top">
+                            {% for comment in review.comments.all %}
+                            <div class="clearer" comment-id="{{ comment.pk }}" csrf="{{ csrf_token }}">
+                                <div style="padding:10px; float:left; width:97%;" class="clearer ">
+                                    <div class="square w3-round" style="float:left; border: 1px solid grey; width:5%;">
+                                        <div style="float:left; background-image: url('{% if comment.user.profile.avatar %}/media/{{comment.user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
+                                    </div>
+                                    <div class="w3-white" style="width:94%; padding:10px; float:right; border-radius:15px;">
+                                        <p><a href="/{{comment.user.username}}/" >{{comment.user.username}} </a>{{ comment.comment }}</p>
+                                    </div>
+                                </div>
+                                {% if request.user == review.user or request.user == comment.user %}
+                                <button class="rcomment-delete w3-btn w3-left"><i class="fa fa-times"></i></button>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            {% endwith %}
+        {% endif %}
+    </div>
+</li>
+{% endif %}
+{% endfor %}

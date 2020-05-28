@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+
+<style>
+    .book-list {
+        position:relative;
+        width:100%;
+
+    }
+    .book-list:after {
+        content:"";
+        display:block;
+        padding-bottom:158%;
+
+    }
+    .list {
+        width:33%;
+        float:left;
+
+    }
+</style>
+
+{% endblock head %}
+
+
+{% block content %}
+
+<div class="w3-container">
+    <div id="book-list">
+        {% include "books/books.html" %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block domready %}
+    var page = 1;
+    var empty_page = false;
+    var block_request = false;
+
+    $(window).scroll(function() {
+        var margin = $(document).height() - $(window).height() - 200;
+        if  ($(window).scrollTop() > margin && empty_page == false && block_request == false) {
+		    block_request = true;
+		    page += 1;
+		    $.get('?page=' + page, function(data) {
+		        if(data == '')
+		        {
+		            empty_page = true;
+		        }
+		        else {
+                    block_request = false;
+                    $('#book-list').append(data);
+    	        }
+            });
+    	}
+    });
+    $('button.fav').click(function(e){
+		e.preventDefault();
+		var div = $(this).closest("div");
+		$.post('{% url "add_fav" %}',
+			{
+				id: $(this).data('id'),
+				action: $(this).data('action')
+			},
+			function(data){
+				if (data['status'] == 'ok') {
+					var previous_action = $('button.fav', div).data('action');
+					// toggle data-action
+					$('button.fav', div).data('action',
+					previous_action == 'fav' ? 'unfav' : 'fav');
+					// toggle link text
+					$('button.fav', div).text(
+					previous_action == 'fav' ? 'Remove from favourites' : 'Add to favourites');
+					// update total followers
+					var previous_favers = parseInt(
+					$('span.count .total', div).text());
+					$('span.count .total', div).text(previous_action == 'fav' ?
+					previous_favers + 1 : previous_favers - 1);
+					if (previous_action == 'fav') {
+						$('button.fav', div).removeClass('custom-green');
+						$('button.fav', div).addClass('custom-red');
+					}
+          			else {
+						$('button.fav', div).removeClass('custom-red');
+						$('button.fav', div).addClass('custom-green');
+					}
+
+				}
+			}
+		);
+	});
+{% endblock %}

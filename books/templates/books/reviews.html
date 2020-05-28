@@ -1,0 +1,86 @@
+
+    <div style="width:100%; max-width:1300px;" class="clearer" id="book-reviews">
+        {% for review in reviews %}
+        <div class="review border-bottom" style="width:100%;">
+            <div class="clearer" style="padding:10px">
+                <div class="square w3-round" style="float:left; border: 1px solid grey; width:7%;">
+                    <div style="float:left; background-image: url('{% if review.user.profile.avatar %}/media/{{review.user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
+                </div>
+                <div style="float:left; width:90%; margin-left:8px;">
+                    <a href="/{{review.user.username}}" >{{ review.user.username }}</a>
+                    <p>{{ review.review|safe|linebreaks }}</p>
+                    <div class="clearer review-bottom">
+                            <ul class="w3-ul review-ul">
+                                <li review-id="{{review.pk}}" csrf="{{csrf_token}}" style="padding:0!important;" class="review-li">
+                                    <div class="interaction">
+                                        {% if request.user == review.user %}
+                                        <a href="#deletePart{{review.pk}}"  class="w3-right" aria-controls="deletePart{{review.pk}}" data-toggle="collapse"><i style=" color:#3b5998;" class="fa fa-trash w3-xlarge"></i></a>
+                                        {% endif %}
+                                        {% if user in review.get_likers %}
+                                        <a href="#" style="padding:0; box-shadow:none; width:25px; margin-right:0; font-size:17px; color:#e80435;" class="w3-xlarge w3-btn w3-white like unlike">
+                                            <i style=" color:#3b5998;" class="fa fa-thumbs-up"></i>
+                                        </a>
+                                        <span class="text"></span>
+                                        <span class="small-size like-count">{{ review.likes }}</span><span class="small-size like-name"> like{{ review.likes|pluralize }}</span>
+
+                                        {% else %}
+                                        <a href="#" style="padding:0; width:25px; margin-right:0; box-shadow:none; font-size:17px; color:#e80435;" class="w3-xlarge w3-btn w3-white like">
+                                            <i style=" color:#3b5998;" class="fa fa-thumbs-o-up"></i>
+                                        </a>
+                                        <span class="text"></span>
+                                        <span class="like-count small-size">{{ review.likes }}</span><span class="small-size like-name"> like{{ review.likes|pluralize }}</span>
+
+                                        {% endif %}
+                                        <button style="padding:0; box-shadow:none; width:27px; margin-right:0;" class="w3-btn w3-white comment" data-toggle="collapse" data-target="#collapseComment{{review.pk}}" aria-expanded="false" aria-controls="collapseComment">
+                                            <i style="color:#3b5998" class="fa fa-comment-o w3-xlarge"></i>
+                                        </button>
+                                        <span class="small-size">Comments</span>
+                                        <span style="padding-left:3px;" class="small-size comment-count">{{ review.comments.all.count }}</span>
+                                    </div>
+                                    <div id="deletePart{{review.pk}}" class="collapse">
+                                        <hr>
+                                        <p style="margin-top:10px;"><strong>Are you sure you want to delete this review?</strong></p>
+                                        <button  type="button" style="margin-right:7px;" class="w3-left w3-btn w3-round custom-red review-delete">Yes</button>
+                                        <button type="button" class="w3-left w3-btn w3-round custom-green" data-target="#deletePart{{review.pk}}" aria-controls="deletePart{{review.pk}}" data-toggle="collapse">No</button>
+                                    </div>
+                                </li>
+                            </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="collapse" id="collapseComment{{review.pk}}" style="background-color:#f2f3f5;">
+            <ul class="comment-ul">
+                <li review-id="{{review.pk}}" csrf="{{csrf_token}}">
+                    <div class="" style="padding:15px;">
+                        <form role="form" method="post" action="/r/comment/" class="commentForm">
+                            {% csrf_token %}
+                            <input type="text" style="width:90%;" class="form-control comment-text input-sm w3-left" placeholder="Write a comment..." pattern=".{5,400}" required name="post" maxlength="400" autocomplete="off">
+                            <input type="submit" style="width:9%;" value="Add" class="w3-right btn btn-primary">
+                            <div class="results"></div>
+                        </form>
+                    </div>
+                    <div style="margin-top:40px; max-height:350px; overflow-y:scroll;" class="comments-list clearer border-top border-bottom">
+                        {% for comment in review.comments.all %}
+                        <div class="clearer" comment-id="{{ comment.pk }}" csrf="{{ csrf_token }}">
+                            <div style="padding:10px; float:left; width:97%;" class="clearer ">
+                                <div class="square w3-round" style="float:left; border: 1px solid grey; width:5%;">
+                                    <div style="float:left; background-image: url('{% if comment.user.profile.avatar %}/media/{{comment.user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
+                                </div>
+                                <div class="w3-white" style="width:94%; padding:10px; float:right; border-radius:15px;">
+                                    <p><a href="/{{comment.user.username}}/" >{{comment.user.username}} </a>{{ comment.comment }}</p>
+                                </div>
+                            </div>
+                            {% if request.user == review.user or request.user == comment.user %}
+                            <button class="comment-delete w3-btn w3-left"><i class="fa fa-times"></i></button>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </li>
+            </ul>
+        </div>
+        {% empty %}
+        <h1>Empty</h1>
+        {% endfor %}
+    </div>

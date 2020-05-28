@@ -1,0 +1,145 @@
+{% extends 'base1.html' %}
+{% load staticfiles %}
+
+{% block head %}
+
+<style>
+body, html {
+  height: 100%;
+  margin: 0;
+  font: 400 15px/1.8 "Lato", sans-serif;
+  color: #777;
+}
+
+.bgimg-1, .bgimg-2, .bgimg-3 {
+  position: relative;
+  opacity: 1;
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+}
+.bgimg-1 {
+  background-image: url("{% static 'images/book1.jpg' %}");
+  min-height: 100%;
+}
+
+.bgimg-2 {
+  background-image: url("{% static 'images/book2.jpeg' %}");
+  min-height: 400px;
+}
+
+.bgimg-3 {
+  background-image: url("{% static 'images/book3.jpeg' %}");
+  min-height: 400px;
+}
+
+.caption {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  text-align: center;
+  color: #000;
+}
+
+.caption span.border {
+  background-color: #111;
+  color: #fff;
+  padding: 18px;
+  font-size: 25px;
+  letter-spacing: 10px;
+}
+
+h3 {
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  font: 20px "Lato", sans-serif;
+  color: #111;
+}
+
+/* Turn off parallax scrolling for tablets and phones */
+@media only screen and (max-device-width: 1024px) {
+    .bgimg-1, .bgimg-2, .bgimg-3 {
+        background-attachment: scroll;
+    }
+}
+
+	@media only screen and (min-width: 650px) {
+	.half { width:49.9999%; float:left; }
+	#login{ margin-right:10px; }
+
+}
+    @media only screen and (min-width: 900px){
+	.content {   width: 83.33333333%; margin-left: 8.33333333%; }
+ }
+	@media only screen and (max-width: 650px){
+	.half { max-width:400px; margin:0 auto; }
+	.intro { display:none; }
+	.login-form, .register-form, .google, .facebook, .form-control { width:100%; padding-right:10px;}
+	.top-login #id_password { width:72%; margin-right:0px;  }
+}
+	#login { width:26%; text-align:center; padding-left:6px; }
+  .intro p {
+    font-size: 18px;
+  }
+</style>
+
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="bgimg-1">
+	<div>
+		<div  style="padding-top:40px;" class="w3-row content w3-container">
+			<div style="margin-top:100px; color:#fff; background-color:#111;" class="intro half w3-container">
+				<h1>Welcome to Libercen</h1>
+				<p>
+				Get the chance to read more about your favourite character and book!
+				</p>
+        <p>
+        Find your next Harry Potter, Sherlock Holmes, and so many others, including new friends!
+        </p>
+			</div>
+			<div class=" w3-container half">
+			<div class="w3-right login-form">
+				<div class="top-login">
+					<div class="social">
+						<ul>
+							<li class="facebook"><a class="socialaccount_provider" href="/accounts/facebook/login/?process=login">Login with Facebook</a></li>
+							<li class="google"><a class="socialaccount_provider" href="/accounts/google/login/?process=login">Login with Google+</a></li>
+						</ul>
+					</div>
+					<form class="login" method="POST" action="/accounts/login/">
+            {% csrf_token %}
+						<p><input class="form-control" id="id_login" name="login" for="id_login" type="text" placeholder="Username" /></p>
+						<p><input class="form-control" id="id_password" name="password" type="password" placeholder="Password" /></p>
+						<input type="hidden" name="next" value="" />
+						<button id="login" type="submit" class="btn btn-default primaryAction">Log-in</button>
+					</form>
+
+					<p class="password-reset"><a href="/accounts/password/reset/">Forgot your password?</a></p>
+
+
+				</div>
+			</div>
+			<div style="margin-top:10px;" class="w3-right register-form">
+				<form class="register" id="signup_form" method="post" action="/accounts/signup/">
+					<p><strong>First time on Libercen?</strong> Sign up</p>
+                    <p><input class="form-control" placeholder="Username" type="text" name="username" id="id_username" minlength="1" autofocus="autofocus" required maxlength="150" /></p>
+                    <p><input class="form-control" placeholder="Email" type="email" name="email" id="id_email" /></p>
+                    <p><input class="form-control" placeholder="Password" type="password" name="password1" required id="id_password1" /></p>
+                    <p><input class="form-control" placeholder="Repeat password" type="password" name="password2" required id="id_password2" /></p>
+					{% csrf_token %}
+					<button id="sign-up" type="submit" class="btn btn-default">Sign-up</button>
+				</form>
+			</div>
+		</div>
+		</div>
+    </div>
+</div>
+
+{% endblock %}

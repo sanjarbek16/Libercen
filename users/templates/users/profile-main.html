@@ -1,0 +1,483 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}{{ page_user.profile.get_screen_name }}{% endblock title %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/swiper.min.css' %}">
+<style>
+	.square {
+		position: relative;
+		width: 100%;
+	}
+
+	.square:after {
+		content: "";
+		display: block;
+		padding-bottom: 100%;
+	}
+	.p-square {
+		position: relative;
+		width: 100%;
+	}
+
+	.p-square:after {
+		content: "";
+		display: block;
+		padding-bottom: 60%;
+	}
+
+
+	.image {
+		position: absolute;
+		background-image: url('/media/{{page_user.profile.avatar}}');
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: cover; 
+		width: 100%;
+		height: 100%;
+	}
+	.settings {
+		position: absolute;
+		background-image: url('/static/icons/settings.png');
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size:cover;
+		width: 100%;
+		height: 100%;
+
+	}
+	.no-image {
+		position: absolute;
+		background-image: url('/static/icons/no-image.jpg');
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: cover; 
+		width: 100%;
+		height: 100%;
+	}
+	.clearer{
+		clear:both;overflow:hidden;
+	}
+	.content:before {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: -1;
+
+  display: block;
+  background-image: url('http://666a658c624a3c03a6b2-25cda059d975d2f318c03e90bcf17c40.r92.cf1.rackcdn.com/unsplash_527bf56961712_1.JPG');
+  width: 1200px;
+  height: 800px;
+
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+}
+
+.content {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 0;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+	{% if page_user.profile.back_image %}
+	.avatar:before {
+  		background-image: url('/media/{{page_user.profile.back_image}}');
+  		min-height: 100%;
+  		padding: 30%;
+        width: 100%;
+        position: absolute;
+  		background-position: center;
+  		background-repeat: no-repeat;
+  		background-size: cover;
+  		content: "";
+        z-index: -1;
+        display: block;
+  		-webkit-filter: blur(1px);
+        -moz-filter: blur(1px);
+        -o-filter: blur(1px);
+        -ms-filter: blur(1px);
+        filter: blur(1px);
+    }
+    .avatar {
+      position: relative;
+      z-index: 0;
+    }
+  	{% else %}
+  	.avatar:before {
+  		background-image: url('/static/images/back.jpg');
+  		min-height: 100%;
+  		padding: 30%;
+        width: 100%;
+        position: absolute;
+  		background-position: center;
+  		background-repeat: no-repeat;
+  		background-size: cover;
+  		content: "";
+        z-index: -1;
+        display: block;
+  		-webkit-filter: blur(2px);
+        -moz-filter: blur(2px);
+        -o-filter: blur(2px);
+        -ms-filter: blur(2px);
+        filter: blur(2px);
+    }
+    .avatar {
+      position: relative;
+      z-index: 0;
+    }
+	{% endif %}
+
+	.swiper-container {
+	 	width:100%;
+	 	margin:0px auto;
+	  	padding:10px;
+	  	background-color: white;
+      	padding-bottom: 50px;
+    }
+    .swiper-slide {
+      	background-position: center;
+      	background-size: cover;
+      	width: 150px;
+      	height: 225px;
+
+    }
+    .profile-list {
+		width:100%;
+		margin:0px auto;
+		background-color: white;
+		padding-bottom: 50px
+		background-color: white;
+
+    }
+    .clearer{
+		clear:both;overflow:hidden;
+	}
+
+
+	.w3-btn {
+		text-align: left!important;
+	}
+	.p-btn {
+	    height:50px;
+	    font-size: 19px;
+	}
+	.wheat {
+		background-color:wheat;
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="width:100%; margin:20px auto; max-width:1200px;" class="clearer">
+	<div style="width:26.999%; background-color:white; float:left;" class="border-all">
+		<div class="p-square avatar border-bottom">
+			{% if page_user.profile.avatar %}
+				<div style="width:50%; margin:auto;">
+					<div class="square" style="margin-bottom:10px; margin-top:9%; float:left;">
+						<div class="image border" style="border-radius:100px;">
+						</div>
+					</div>
+				</div>
+			{% else %}
+				<div style="width:50%; margin:auto;">
+					<div class="square" style="margin-bottom:10px; margin-top:9%; float:left;">
+						<div class="no-image border" style="border-radius:100px;">
+						</div>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+		<div style="padding-left: 14px; padding-top:12px;" class="clearer">
+			<p style="float:left; font-size:20px;" >{{ page_user.profile.get_screen_name }}</p>
+			{% if request.user == page_user %}
+            <a href="/settings/"><i style="font-size:30px; margin-left:10px;" class="fa fa-cog" aria-hidden="true"></i></a>
+			{% else %}
+				<div>
+					{% with total_followers=page_user.followers.count %}
+						<a href="#" style="color:white; border-radius:5px; margin-left:4px; margin-bottom:11px;" data-id="{{ page_user.id }}" data-action="{% if request.user in page_user.followers.all %}un{% endif %}follow" class="w3-btn custom-{% if request.user in page_user.followers.all %}green{% else %}blue{% endif %} follow button">
+							{% if request.user not in page_user.followers.all %}
+								Follow
+							{% else %}
+								Following
+							{% endif %}
+						</a>
+					{% endwith %}
+				</div>
+			{% endif %}
+		</div>
+		<div style="width:100%;" class="border-top">
+			<ul>
+				<li class="w3-btn border-bottom p-btn" style="width:100%;">
+					<a style="width:100%;" href="/{{page_user.username}}/followers/">
+						{% with total_followers=page_user.followers.count %}
+							<span class="count-followers">
+								<span class="total">{{ total_followers }}</span>
+								Follower{{ total_followers|pluralize }}
+							</span>
+						{% endwith %}
+					</a>
+				</li>
+				<li class="w3-btn border-bottom p-btn" style="width:100%;">
+					<a style="width:100%;" href="/{{page_user.username}}/following/">
+						{% with total_followings=page_user.following.count %}
+							<span class="count-following">
+								<span class="total">{{ total_followings }}</span>
+								Following
+							</span>
+						{% endwith %}
+					</a>
+				</li>
+				<li class="w3-btn border-bottom p-btn" style="width:100%;">
+					<a href="/{{page_user.username}}/favourite-books/">
+						{% with total_favourites=page_user.profile.fav_books.count %}
+							<span class="count-books">
+								<span class="total">{{ total_favourites }}</span>
+								Favourite book{{ total_favourites|pluralize }}
+							</span>
+						{% endwith %}
+					</a>
+				</li>
+				<li class="w3-btn border-bottom p-btn" style="width:100%;"><a href="#">Read</a></li>
+				<li class="w3-btn border-bottom p-btn" style="float:left; width:100%;"><a href="#">Wants to read</a></li>
+				<li class="w3-btn p-btn" style="float:left; width:100%;"><a href="/{{page_user.username}}/info/">Info</a></li>
+			</ul>
+		</div>
+	</div>
+	<div style="width:71.999%; float:right;" class="bg-white border-all">
+		{% with books=page_user.profile.fav_books.all %}
+			{% if books.count > 4  %}
+				<div style="padding-top:15px; text-align:center;">
+            		<p class="h3 top-headline" style="display:inline-block;"><b>Favourite books</b></p>
+        		</div>
+				<div class="bg-white swiper-container border-bottom">
+					<div class="swiper-wrapper">
+						{% for book in books %}
+						<a class="swiper-slide border" href="{% url 'book' book.slug %}" style="background-image:url('/media/{{book.cover}}')"></a>
+						{% endfor %}
+					</div>
+				</div>
+			{% endif %}
+		{% endwith %}
+		<div class="profile-list">
+			{% if posts %}
+            <div style="padding-top:15px; text-align:center;">
+                <p class="h3" style="display:inline-block;"><b>Posts</b></p>
+            </div>
+			<div id="posts-list">
+				{% include "users/posts.html" with posts=posts %}
+			</div>
+			{% else %}
+				{% if page_user is request.user %}
+					<div style="padding:10px;">
+						<h2>What a boring page. Write something to make it more fun.</h2>
+					</div>
+				{% else %}
+					<div style="padding:10px;">
+						<h2>No posts available</h2>
+					</div>
+				{% endif %}
+			{% endif %}
+		</div>
+	</div>
+</div>
+
+<script src="{% static 'js/swiper.min.js' %}"></script>
+
+<script>
+    var swiper = new Swiper('.swiper-container', {
+      effect: 'coverflow',
+      centeredSlides: true,
+      slidesPerView: 'auto',
+      autoplay: {
+    	delay: 3000,
+  		},
+  	  loop: true,
+      coverflowEffect: {
+        rotate: 10,
+        stretch: 0,
+        depth: 100,
+        modifier: 1,
+        slideShadows : true,
+      },
+      pagination: {
+        el: '.swiper-pagination',
+      },
+    });
+  </script>
+{% endblock %}
+
+{% block domready %}
+	$('a.follow').click(function(e){
+		e.preventDefault();
+		var div = $(this).closest("div");
+		$.post('{% url "user_follow" %}',
+			{
+				id: $(this).data('id'),
+				action: $(this).data('action')
+			},
+			function(data){
+				if (data['status'] == 'ok') {
+					var previous_action = $('a.follow', div).data('action');
+					// toggle data-action
+					$('a.follow', div).data('action',
+					previous_action == 'follow' ? 'unfollow' : 'follow');
+					// toggle link text
+					$('a.follow', div).text(
+					previous_action == 'follow' ? 'Following' : 'Follow');
+					// update total followers
+					var previous_followers = parseInt(
+					$('span.count-followers .total', div).text());
+					$('span.count-followers .total', div).text(previous_action == 'follow' ?
+					previous_followers + 1 : previous_followers - 1);
+					if (previous_action == 'follow') {
+						$('a.follow', div).removeClass('custom-blue');
+						$('a.follow', div).addClass('custom-green');
+					}
+          			else {
+						$('a.follow', div).removeClass('custom-green');
+						$('a.follow', div).addClass('custom-blue');
+					}
+				}
+			}
+		);
+	});
+	$("ul.post-ul").on("click", ".like", function () {
+		var li = $(this).closest("li");
+		var post = $(li).attr("post-id");
+		var csrf = $(li).attr("csrf");
+		$.ajax({
+		  url: '/p/like/',
+		  data: {
+			'post': post,
+			'csrfmiddlewaretoken': csrf
+		  },
+		  type: 'post',
+		  cache: false,
+		  success: function (data) {
+			if ($(".like", li).hasClass("unlike")) {
+			  $(".like", li).removeClass("unlike");
+			  $(".like .fa", li).removeClass("fa-thumbs-up")
+			  $(".like .fa", li).addClass("fa-thumbs-o-up");
+			  $(".like .text", li).text("Like");
+			}
+			else {
+			  $(".like .fa", li).addClass("fa-thumbs-up");
+			  $(".like .fa", li).removeClass("fa-thumbs-o-up");
+			  $(".like", li).addClass("unlike");
+			  $(".like .text", li).text("Unlike");
+			}
+			$(".like-count", li).text(data);
+			$(".like .fa", li).addClass(data);
+			$(".like .fa", li).removeClass(data);
+		  }
+		});
+		return false;
+	  });
+    var page = 1;
+    var empty_page = false;
+    var block_request = false;
+
+    $(window).scroll(function() {
+        var margin = $(document).height() - $(window).height() - 200;
+        if  ($(window).scrollTop() > margin && empty_page == false && block_request == false) {
+		    block_request = true;
+		    page += 1;
+		    $.get('?page=' + page, function(data) {
+		        if(data == '')
+		        {
+		            empty_page = true;
+		        }
+		        else {
+                    block_request = false;
+                    $('#posts-list').append(data);
+    	        }
+            });
+    	}
+    });
+
+	  $("ul.post-ul").on("click", ".post-delete", function () {
+		var li = $(this).closest("li");
+		var post = $(li).attr("post-id");
+		var csrf = $(li).attr("csrf");
+		var div = $(this).closest("div.post")
+		$.ajax({
+		  url: '/p/delete/',
+		  data: {
+			'post': post,
+			'csrfmiddlewaretoken': csrf
+		  },
+		  type: 'post',
+		  cache: false,
+		  success: function (data) {
+			$(div).fadeOut(400, function () {
+			  $(div).remove();
+			});
+		  }
+		});
+	  });
+		function post_comment(post, csrf, li) {
+			$.ajax({
+				url : "/p/comment/",
+				type : "POST",
+				data : {
+					'comment' : $('.comment-text', li).val(),
+					'post' : post,
+					'csrfmiddlewaretoken': csrf
+				},
+
+				// handle a successful response
+				success : function(json) {
+					$('.comment-text', li).val(''); // remove the value from the input
+					console.log(json); // log the returned json to the console
+					if (json.useravatar) {
+						var avatarUrl = json.useravatar
+					}
+					else {
+						var avatarUrl = "/static/icons/no-image.jpg"
+					}
+					$('.comments-list', li).prepend('<div class="clearer" comment-id="' + json.commentpk + '" csrf="{{ csrf_token }}"><div style="padding:10px; float:left; width:97%;" class="clearer"><div class="square w3-round" style="float:left; border: 1px solid grey; width:5%;"><div style="float:left; background-image: url(' + avatarUrl + ');" class="w3-round small-profile"></div></div><div class="w3-white" style="width:94%; padding:10px; float:right; border-radius:15px;"><p><a href="/' + json.user + '/" >' + json.user + ' </a>' + json.comment + '</p></div></div><button class="comment-delete w3-btn w3-left"><i class="fa fa-times"></i></button></div>');
+				},
+				// handle a non-successful response
+				error : function(xhr,errmsg,err) {
+					$('.results', li).html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+						" <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+					console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+				}
+			});
+		};
+		$('.commentForm').on('submit', function(event){
+			event.preventDefault();
+			var li = $(this).closest("li");
+			var post = $(li).attr("post-id");
+			var csrf = $(li).attr("csrf");
+			post_comment(post, csrf, li);
+		});
+
+		  $(".comment-delete").on("click", function () {
+			var div = $(this).closest("div");
+			var comment = $(div).attr("comment-id");
+			var csrf = $(div).attr("csrf");
+			$.ajax({
+			  url: '/p/comment/delete/',
+			  data: {
+				'comment': comment,
+				'csrfmiddlewaretoken': csrf
+			  },
+			  type: 'post',
+			  cache: false,
+			  success: function (data) {
+				$(div).fadeOut(400, function () {
+				  $(div).remove();
+				});
+			  }
+			});
+		  });
+{% endblock %}

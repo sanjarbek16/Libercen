@@ -1,0 +1,393 @@
+{% load staticfiles %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-112324160-1"></script>
+    <script>
+       window.dataLayer = window.dataLayer || [];
+       function gtag(){dataLayer.push(arguments);}
+       gtag('js', new Date());
+
+       gtag('config', 'UA-112324160-1');
+    </script>	
+    <meta charset="UTF-8">
+    <title>{% block title %}Libercen - It's where you get the most{% endblock %}</title>
+    <meta property="og:description" content="{% block description %}Get the chance to read more about your favourite characters and books!{% endblock %}" />
+    <meta property="og:url" content="{{ request.get_full_path }}" />
+    <meta property="og:image" content="{% static 'icons/logo-big.png' %}" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <link rel="shortcut icon" href="{% static 'icons/favicon.ico' %}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}" type = "text/css"/>
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" type = "text/css"/>
+    <link rel="stylesheet" href="{% static 'css/fleximath.css' %}">
+    <script src="{% static 'js/libercen.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/b084888755.js"></script>
+    <script>
+        var csrftoken = $.cookie('csrftoken');
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        $(document).ready(function(){
+            {% block domready %}
+            {% endblock %}
+        });
+    </script>
+    <style type="text/css">
+    body {
+        font-family: 'Libre Baskerville', serif;
+    }
+    a, h1, h2, h3, h4, h5, p {
+        font-family: 'Libre Baskerville', serif;
+    }
+    .body-main {
+        min-height:750px;
+
+    }
+    a:hover {
+        text-decoration: none!important;
+    }
+    .border-top {
+		border-top:1px solid #bfbaba;
+	}
+	.border-bottom {
+		border-bottom:1px solid #bfbaba;
+	}
+	.border-left {
+		border-left:1px solid #bfbaba;
+	}
+	.border-right {
+		border-right:1px solid #bfbaba;
+	}
+	.border-all {
+		border:1px solid #bfbaba;
+	}
+	.custom-red {
+	    background-color:#e64a4a;
+	    color:white;
+	}
+	.cke_editor_id_post {
+	    width:100%!important;
+	}
+	.cke_editor_id_review {
+	    width:100%!important;
+	}
+	.django-ckeditor-widget {
+	    width: 100%;
+	}
+	.likes {
+		position: absolute;
+		background-image: url('/static/icons/like.png');
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		width: 100%;
+		height: 100%;
+	}
+	.comments {
+		position: absolute;
+		background-image: url('/static/icons/comment.png');
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		width: 100%;
+		height: 100%;
+	}
+	.no-data {
+  text-align: center;
+  padding: 1em 0;
+}
+
+    #notifications {
+      font-size: 1.5em;
+      padding-right: 13px;
+      color: #dddddd;
+    }
+
+    #notifications.new-notifications {
+      color: #428bca;
+    }
+
+    .popover {
+      max-width: 350px;
+      width: 350px;
+    }
+
+    .popover ul {
+      padding: 0;
+      margin: 0;
+    }
+
+    .popover ul li {
+      list-style: none;
+      border-bottom: 1px solid #eeeeee;
+      padding: .4em 0;
+    }
+
+    .popover ul li:last-child {
+      border-bottom: none;
+    }
+
+    .popover ul li .user-picture {
+      width: 45px;
+      float: left;
+    }
+
+    .popover ul li p {
+      font-size: .9em;
+      padding: 0 0 0 .6em;
+      margin-left: 45px;
+      margin-bottom: 0;
+    }
+    ul.all-notifications {
+      padding: 0;
+      margin-top: 1em;
+    }
+
+    ul.all-notifications li {
+      list-style: none;
+      border-bottom: 1px solid #eeeeee;
+      padding: .8em 0;
+    }
+
+    ul.all-notifications li:last-child {
+      border-bottom: none;
+    }
+
+    ul.all-notifications li small {
+      color: #cccccc;
+      font-size: .8em;
+    }
+
+    ul.all-notifications li p {
+      margin: 0;
+    }
+
+    ul.all-notifications li div {
+      margin-left: 40px;
+      padding-left: 1em;
+    }
+
+    ul.all-notifications .user-picture {
+      width: 40px;
+      float: left;
+    }
+    .square {
+		position: relative;
+		width: 100%;
+	}
+
+	.square:after {
+		content: "";
+		display: block;
+		padding-bottom: 100%;
+	}
+	.no-image {
+		position: absolute;
+		background-image: url('/static/icons/no-image.jpg');
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		width: 100%;
+		height: 100%;
+	}
+	.nav-logo {
+	    background-image: url('/static/icons/logo.png');
+	    background-position: center center;
+	    background-repeat: no-repeat;
+	    background-size: cover;
+	    width: 100%;
+		height: 100%;
+	}
+	.nav-logo-link {
+	    margin-left:45px;
+	    width:200px;
+	    height:38px;
+
+	}
+	.backg-image {
+	    background-position: center center;
+	    background-repeat: no-repeat;
+	    background-size: cover;
+	    width: 100%;
+		height: 100%;
+	}
+	.menu-icon {
+	    margin-right:10px;
+
+	}
+	.small-profile {
+		position: absolute;
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size:cover;
+		width: 100%;
+		height: 100%;
+	}
+
+	.custom-nav {
+	    background-color: #a51c30;
+	    color: white;
+	}
+	.errorlist {
+	    list-style:none;
+
+	}
+	.errorlist li {
+		color: #a94442;
+    	background-color: #f2dede;
+    	padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #ebccd1;
+        border-radius: 4px;
+	}
+	.custom-div {
+	    max-width:1000px;
+	    margin:0 auto;
+	    width:100%;
+	    padding:15px;
+	    margin-top:30px;
+	    margin-bottom:200px;
+
+	}
+        ::-webkit-scrollbar {
+        -webkit-appearance: none;
+        width: 7px;
+    }
+    ::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background-color: rgba(0,0,0,.5);
+        -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+    }
+    .comment-delete {
+        padding:5px;
+        margin-top:5px;
+        width:1.999%;
+        font-size:10px;
+    }
+    .pcomment-delete {
+        padding: 1px;
+        margin-top:5px;
+        width:1.999%;
+        font-size:10px;
+    }
+    .rcomment-delete {
+        padding: 1px;
+        margin-top:5px;
+        width:1.999%;
+        font-size:10px;
+    }
+    .comment-ul {
+        list-style:none;
+        margin-bottom: 0;
+    }
+    .top-headline {
+        margin-top:20px;
+    }
+    .facebook {
+    width:270px;
+    position: relative;
+    background-color: #3a4894;
+    background-image: url('/static/icons/facebook.png');
+    background-position: -2px -3px;
+    background-repeat: no-repeat;
+    height: 30px;
+    background-size: 30px;
+    border-radius: 5px;
+    
+}
+    .google {
+        width:270px;
+        position: relative;
+        margin-top: 10px;
+        background-color: #d0422a;
+        background-image: url('/static/icons/google.png');
+        background-position: 3px 1px;
+        background-repeat: no-repeat;
+        height: 30px;
+        background-size: 30px;
+        border-radius: 5px;
+        
+    }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body>
+
+    <nav class="custom-nav navbar navbar-expand-md navbar-dark">
+        <a class="nav-logo-link" href="/">
+            <div class="nav-logo">
+            </div>
+        </a>
+        <div style="max-width:80px;" class="collapse navbar-collapse" id="navbarsExample04">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/books/">Books</a>
+                </li>
+            </ul>
+        </div>
+        <form style="margin:0 auto; width:500px;" method="get" action="/search/" class="form-inline mt-2 mt-md-0">
+            <input class="form-control mr-sm-2" type="search" name="q" id="id_q" placeholder="Search" aria-label="Search">
+            <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        {% if request.user.is_authenticated %}
+        <a style="color:white; font-size:30px;" class="nav-link" href="/p/post/" title="Write post"><i class="fa fa-pencil"></i></a>
+        <a style="color:white; font-size:30px;" class="nav-link" href="#" id="notifications" data-container="body" data-toggle="popover" data-placement="bottom" title="Notifications"><i class="fa fa-bell-o"></i></a>
+        <a class="border-all w3-round" style="width:45px; height:45px; margin-right:45px;" href="#" id="userMenu" data-container="body" data-toggle="popover" data-placement="bottom" title="{{ request.user.profile.get_screen_name }}">
+            <div class="square w3-round">
+                <div class="w3-round backg-image {% if request.user.profile.avatar %}" style="position:absolute; background-image: url('/media/{{request.user.profile.avatar}}');"{% else %}no-image"{%endif%}>
+            </div>
+            </div>
+        </a>
+        {% endif %}
+
+
+    </nav>
+    <div class="body-main">
+    {% block content %}
+    {% endblock %}
+    </div>
+    <script src="{% static 'js/notifications.js' %}"></script>
+</body>
+
+<footer class="footer-distributed">
+    <div class="footer-right">
+        <a href="#"><i class="fa fa-facebook"></i></a>
+        <a href="#"><i class="fa fa-twitter"></i></a>
+    </div>
+
+			<div class="footer-left">
+
+				<p class="footer-links">
+					<a href="/">Main</a>
+					·
+					<a href="/blog/">Blog</a>
+					·
+					<a href="#">About</a>
+					·
+					<a href="#">FAQ</a>
+					·
+					<a href="#">Contact</a>
+				</p>
+
+				<p>Libercen &copy; 2018</p>
+			</div>
+</footer>
+</html>

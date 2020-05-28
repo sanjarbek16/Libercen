@@ -1,0 +1,51 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Libercen - It's where you get the most{% endblock %}</title>
+    <meta property="og:description" content="{% block description %}Get the chance to read more about your favourite characters and books!{% endblock %}" />
+    <meta property="og:url" content="{{ request.get_full_path }}" />
+    <meta property="og:image" content="{% static 'icons/logo-big.png' %}" />
+    <link rel="stylesheet" href="{% static 'css/w3.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <link rel="shortcut icon" href="{% static 'icons/favicon.ico' %}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}" type = "text/css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <style type="text/css">
+        .facebook {
+            width:270px;
+            position: relative;
+            background-color: #3a4894;
+            background-image: url('/static/icons/facebook.png');
+            background-position: -2px -3px;
+            background-repeat: no-repeat;
+            height: 30px;
+            background-size: 30px;
+            border-radius: 5px;
+            
+        }
+        .google {
+            width:270px;
+            position: relative;
+            margin-top: 10px;
+            background-color: #d0422a;
+            background-image: url('/static/icons/google.png');
+            background-position: 3px 1px;
+            background-repeat: no-repeat;
+            height: 30px;
+            background-size: 30px;
+            border-radius: 5px;
+            
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body>
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>

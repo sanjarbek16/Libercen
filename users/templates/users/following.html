@@ -1,0 +1,30 @@
+<div style="width:100%; max-width:1300px;" class="clearer">
+	{% for user in followings %}
+    <div class="border-bottom" style="width:100%;">
+        <div class="clearer" style="padding:10px">
+            <div class="square w3-left border-all" style="border-radius: 50px; float:left; width:50px;">
+                <div style="border-radius: 50px; float:left; background-image: url('{% if user.profile.avatar %}/media/{{user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
+            </div>
+            <div class="w3-left" style="font-size:18px; margin-top:8px; float:left; margin-left:8px;">
+                <a href="/{{user.username}}" >{{ user.username }}</a>
+            </div>
+            {% if request.user == user %}
+            {% else %}
+            <div class="w3-right">
+                {% with total_following=user.following.count %}
+                <a href="#" style="color:white; border-radius:5px; margin-left:4px; margin-bottom:11px;" data-id="{{ user.id }}" data-action="{% if user in request.user.following.all %}un{% endif %}follow" class="w3-btn custom-{% if user in request.user.following.all %}green{% else %}blue{% endif %} follow button">
+                    {% if user not in request.user.following.all %}
+                    Follow
+                    {% else %}
+                    Following
+                    {% endif %}
+                </a>
+                {% endwith %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <h1>Empty</h1>
+    {% endfor %}
+</div>

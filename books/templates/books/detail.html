@@ -1,0 +1,310 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}{{ book.name }}{% endblock title %}
+
+{% block head %}
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+<style>
+	.square {
+		position: relative;
+		width: 100%;
+		border-radius: 3px;
+
+	}
+
+	.square:after {
+		content: "";
+		display: block;
+		padding-bottom: 100%;
+	}
+	.square-cover {
+		position: relative;
+		width: 25%;
+		border-radius: 3px;
+
+	}
+
+	.square-cover:after {
+		content: "";
+		display: block;
+		padding-bottom: 160%;
+	}
+
+	.image {
+		position: absolute;
+		background-image: url('/media/{{book.cover}}');
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		width: 100%;
+		height: 100%;
+	}
+	.clearer{
+		clear:both;overflow:hidden;
+	}
+	.form-control {
+		width:100%;
+	}
+	.small-profile {
+		position: absolute;
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size:cover;
+		width: 100%;
+		height: 100%;
+	}
+
+
+
+</style>
+<script>
+
+</script>
+{% endblock %}
+
+
+
+{% block content %}
+<div class="border-all" style="margin-top:30px; max-width:800px; width:90%; margin:10px auto;background-color: white;">
+	{% if messages %}
+	{% for message in messages %}
+	<div>
+		<div class="alert alert-success alert-dismissable">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			{{ message }}
+		</div>
+	</div>
+	{% endfor %}
+	{% endif %}
+	<div class="clearer w3-padding">
+		<div class="square-cover border-all" style="float:left;">
+			<div class="image"></div>
+		</div>
+		<div style="float:left; padding-left:10px; width:74%;">
+			<p class="w3-large"><strong>{{book.name}}</strong></p>
+
+			{% with total_users_liked=book.profile_set.count %}
+				<span class="count">
+				<span class="total">{{ total_users_liked }}</span>
+					user{{ total_users_liked|pluralize }} liked
+				</span>
+				<button data-id="{{ book.id }}" data-action="{% if book in request.user.profile.fav_books.all %}un{% endif %}fav" class="w3-round w3-btn custom-{% if book in request.user.profile.fav_books.all %}red{% else %}green{% endif %} fav button">
+				{% if book not in request.user.profile.fav_books.all %}
+					Add to favourites
+				{% else %}
+					Remove from favourites
+				{% endif %}
+				</button>
+			{% endwith %}
+
+			<p style="margin-top:15px;"><strong>Author: </strong>{{book.author}}</p>
+
+			{% if book.publisher %}
+				<p><strong>Publisher: </strong>{{ book.publisher }}</p>
+			{% endif %}
+
+			{% if book.published %}
+				<p><strong>Published: </strong>{{ book.published }}</p>
+			{% endif %}
+
+			{% if book.page_number  %}
+				<p><strong>Page count: </strong>{{ book.page_number }}</p>
+			{% endif %}
+
+			<p>{{book.about|safe|linebreaks}}</p>
+		</div>
+	</div>
+	<hr>
+	<h4 class="w3-center">Add your review about the book</h4>
+	<form action="." method="post" class="w3-padding">
+		<div style="margin-top:10px; margin-bottom:20px;">
+			{{ review_form.as_p }}
+			{% csrf_token %}
+			<p><input class="w3-btn w3-round custom-green" style="box-shadow:none; color:white" type="submit" value="Add review"></p>
+		</div>
+	</form>
+	{% if reviews %}
+    <h4 class="w3-center">Reviews</h4>
+	<div class="review-list">
+		{% include 'books/reviews.html' with reviews=reviews %}
+	</div>
+	{% endif %}
+</div>
+
+
+
+
+{% endblock %}
+
+{% block domready %}
+    var page = 1;
+    var empty_page = false;
+    var block_request = false;
+
+    $(window).scroll(function() {
+        var margin = $(document).height() - $(window).height() - 200;
+        if  ($(window).scrollTop() > margin && empty_page == false && block_request == false) {
+		    block_request = true;
+		    page += 1;
+		    $.get('?page=' + page, function(data) {
+		        if(data == '')
+		        {
+		            empty_page = true;
+		        }
+		        else {
+                    block_request = false;
+                    $('#review-list').append(data);
+    	        }
+            });
+    	}
+    });
+	$('button.fav').click(function(e){
+		e.preventDefault();
+		var div = $(this).closest("div");
+		$.post('{% url "add_fav" %}',
+			{
+				id: $(this).data('id'),
+				action: $(this).data('action')
+			},
+			function(data){
+				if (data['status'] == 'ok') {
+					var previous_action = $('button.fav').data('action');
+					// toggle data-action
+					$('button.fav').data('action',
+					previous_action == 'fav' ? 'unfav' : 'fav');
+					// toggle link text
+					$('button.fav').text(
+					previous_action == 'fav' ? 'Remove from favourites' : 'Add to favourites');
+					// update total followers
+					var previous_favers = parseInt(
+					$('span.count .total').text());
+					$('span.count .total').text(previous_action == 'fav' ?
+					previous_favers + 1 : previous_favers - 1);
+					if (previous_action == 'fav') {
+						$('button.fav', div).removeClass('custom-green');
+						$('button.fav', div).addClass('custom-red');
+					}
+          			else {
+						$('button.fav', div).removeClass('custom-red');
+						$('button.fav', div).addClass('custom-green');
+					}
+
+				}
+			}
+		);
+	});
+
+	$("ul.review-ul").on("click", ".like", function () {
+		var li = $(this).closest("li");
+		var review = $(li).attr("review-id");
+		var csrf = $(li).attr("csrf");
+		$.ajax({
+		  url: '/r/like/',
+		  data: {
+			'review': review,
+			'csrfmiddlewaretoken': csrf
+		  },
+		  type: 'post',
+		  cache: false,
+		  success: function (data) {
+			if ($(".like", li).hasClass("unlike")) {
+			  $(".like", li).removeClass("unlike");
+			  $(".like .fa", li).removeClass("fa-thumbs-up")
+			  $(".like .fa", li).addClass("fa-thumbs-o-up");
+			  $(".like .text", li).text("Like");
+			}
+			else {
+			  $(".like .fa", li).addClass("fa-thumbs-up");
+			  $(".like .fa", li).removeClass("fa-thumbs-o-up");
+			  $(".like", li).addClass("unlike");
+			  $(".like .text", li).text("Unlike");
+			}
+			$(".like-count", li).text(data);
+			$(".like .fa", li).addClass(data);
+			$(".like .fa", li).removeClass(data);
+		  }
+		});
+		return false;
+	  });
+
+	  $("ul.review-ul").on("click", ".review-delete", function () {
+		var li = $(this).closest("li.review-li");
+		var review = $(li).attr("review-id");
+		var csrf = $(li).attr("csrf");
+		var div = $(this).closest("div.review")
+		$.ajax({
+		  url: '/r/delete/',
+		  data: {
+			'review': review,
+			'csrfmiddlewaretoken': csrf
+		  },
+		  type: 'post',
+		  cache: false,
+		  success: function (data) {
+			$(div).fadeOut(400, function () {
+			  $(div).remove();
+			});
+		  }
+		});
+	  });
+		function review_comment(review, csrf, li) {
+			$.ajax({
+				url : "/r/comment/",
+				type : "POST",
+				data : {
+					'comment' : $('.comment-text', li).val(),
+					'review' : review,
+					'csrfmiddlewaretoken': csrf
+				},
+
+				// handle a successful response
+				success : function(json) {
+					$('.comment-text', li).val(''); // remove the value from the input
+					console.log(json); // log the returned json to the console
+					if (json.useravatar) {
+						var avatarUrl = json.useravatar
+					}
+					else {
+						var avatarUrl = "/static/icons/no-image.jpg"
+					}
+					$('.comments-list', li).prepend('<div class="clearer" comment-id="' + json.commentpk + '" csrf="{{ csrf_token }}"><div style="padding:10px; float:left; width:97%;" class="clearer"><div class="square w3-round" style="float:left; border: 1px solid grey; width:5%;"><div style="float:left; background-image: url(' + avatarUrl + ');" class="w3-round small-profile"></div></div><div class="w3-white" style="width:94%; padding:10px; float:right; border-radius:15px;"><p><a href="/' + json.user + '/" >' + json.user + ' </a>' + json.comment + '</p></div></div><button class="comment-delete w3-btn w3-left"><i class="fa fa-times"></i></button></div>');
+				},
+				// handle a non-successful response
+				error : function(xhr,errmsg,err) {
+					$('.results', li).html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+						" <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+					console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+				}
+			});
+		};
+		$('.commentForm').on('submit', function(event){
+			event.preventDefault();
+			var li = $(this).closest("li");
+			var review = $(li).attr("review-id");
+			var csrf = $(li).attr("csrf");
+			review_comment(review, csrf, li);
+		});
+
+		$(".comment-delete").on("click", function () {
+			var div = $(this).closest("div");
+			var comment = $(div).attr("comment-id");
+			var csrf = $(div).attr("csrf");
+			$.ajax({
+			  url: '/r/comment/delete/',
+			  data: {
+				'comment': comment,
+				'csrfmiddlewaretoken': csrf
+			  },
+			  type: 'post',
+			  cache: false,
+			  success: function (data) {
+				$(div).fadeOut(400, function () {
+				  $(div).remove();
+				});
+			  }
+			});
+		  });
+
+{% endblock %}

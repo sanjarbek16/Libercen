@@ -1,0 +1,29 @@
+{% load i18n %}
+{% load humanize %}
+
+<ul style="max-height:300px; overflow-y: auto; margin-left:5px; margin-right:5px;">
+  {% for notification in notifications %}
+    <li class="clearfix">
+      {% if notification.from_user.profile.avatar %}
+      <div style="width:45px;">
+        <div class="square" style="margin-bottom:10px; margin-top:9%; float:left;">
+          <div class="border" style="border-radius:100px; position: absolute; background-image: url('/media/{{notification.from_user.profile.avatar}}');background-position: center center; background-repeat: no-repeat; background-size: cover;width: 100%; height: 100%;">
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div style="width:45px;">
+        <div class="square" style="margin-bottom:10px; margin-top:9%; float:left;">
+          <div class="no-image border" style="border-radius:100px;">
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      <p>{{ notification|safe|linebreaks }}</p>
+      <p><small>{{ notification.date|naturaltime }}</small></p>
+    </li>
+  {% empty %}
+    <li style="text-align: center">{% trans 'You have no unread notification' %}</li>
+  {% endfor %}
+    <li style="text-align: center"><a href="{% url 'notifications' %}">{% trans 'See all' %}</a></li>
+</ul>

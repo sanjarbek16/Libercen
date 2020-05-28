@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% load humanize %}
+
+{% block title %} Notifications {% endblock %}
+
+{% block head %}
+  <link href="{% static 'css/notifications.css' %}" rel="stylesheet">
+{% endblock head %}
+
+{% block content %}
+  <div style="width:100%; max-width:850px; margin:30px auto; min-height:400px; padding:15px;" class="w3-white border-all">
+    <div class="border-bottom">
+      <h1>Notifications</h1>
+    </div>
+    <ul class="w3-white all-notifications">
+      {% for notification in notifications %}
+        <li class="clearfix">
+          <a href="{% url 'profile' notification.from_user.username %}"><img src="{% if notification.from_user.profile.avatar %}/media/{{notification.from_user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}" class="user-picture"></a>
+          <div>
+            <small>{{ notification.date|naturaltime }}</small>
+            <p>{{ notification|safe|linebreaks }}</p>
+          </div>
+        </li>
+      {% empty %}
+        <li>{% trans 'You have no notification' %}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

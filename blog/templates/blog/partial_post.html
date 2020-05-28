@@ -1,0 +1,48 @@
+{% load i18n %}
+<div class="clearer" style="max-width:880px; margin:0 auto;">
+    <div style="width:100%;" >
+        <div class="w3-white w3-padding">
+            <p>{{post.create_date|date:"D d M Y" }}</p>
+            <div>
+                <p class="w3-center big-title">{{ post.title }}</h3>
+            </div>
+            <div class="w3-justify stream">
+                <div style="text-align:center;">
+                    <img src="/media/{{post.article_image}}" alt="{{ post.title }}" style="width:100%; display:inline-block;">
+                </div>
+            <hr>
+                {{ post.content|safe|linebreaks }}
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<div style="width:100%; margin-top:15px;">
+    <div class="a-similar" style="max-width:1500px; margin:0 auto; border-top:1px solid black;">
+        <div style="width:100%; max-width:1500px;" class="clearer">
+            <h2 style="padding-top:15px; text-align:center;">{% trans 'Latest Posts' %}</h2>
+            {% for post in latest_posts %}
+            {% if post.title %}
+            <div style="padding:2px; margin: 22px auto;" class="a-list">
+                <div style="width:100%;" class="w3-white custom-padding w3-left">
+                    <div class="s-img" style="float:left;">
+                    <a href="{% url 'post' post.slug %}">
+                        <div style="width:100%; height:100%; position:absolute; background-image: url('/media/{{post.article_image}}'); background-position: center top; background-repeat: no-repeat; background-size:cover;">
+                        </div>
+                    </a>
+                    </div>
+
+                    <div class="s-top">
+                        <div style="">
+                            <p class="s-title blue" style="margin-bottom:5px!important;"><a href="{% url 'post' post.slug %}"><b>{{ post.title }}</b></a></p>
+                            <p class="title"><span class="fa fa-user"></span> <i>{{ post.author.first_name }} {{ post.author.last_name }}</i></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>

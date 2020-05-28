@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block head %}
+
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+<script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div style="margin-top:30px; max-width:710px; width:90%; margin:10px auto; border:1px solid grey; padding:10px; background-color: #efecec;" class=" w3-white w3-container">
+    <div>
+        <h2>Write your post</h2>
+        <form action="." method="post" enctype="multipart/form-data">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <input class="w3-btn w3-round custom-blue" style="box-shadow:none; color:white" type="submit" value="Post">
+        </form>
+    </div>
+</div>
+
+{% endblock %}

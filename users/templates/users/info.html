@@ -1,0 +1,17 @@
+<div style="width:100%; max-width:1300px;" class="clearer">
+    <ul class="info-ul">
+        <li class="border-bottom"><strong>Username:</strong> {{page_user.username}}</li>
+        {% if page_user.first_name %}
+        <li class="border-bottom"><strong>First Name:</strong> {{page_user.first_name}}</li>
+        {% endif %}
+        {% if page_user.last_name %}
+        <li class="border-bottom"><strong>Last Name:</strong> {{page_user.last_name}}</li>
+        {% endif %}
+        {% if page_user.profile.about %}
+        <li class="border-bottom"><strong>About:</strong> {{page_user.profile.about}}</li>
+        {% endif %}
+        {% if page_user.profile.url %}
+        <li class="border-bottom"><strong>Url:</strong><a href="{{page_user.profile.url}}"> {{page_user.profile.url}}</a></li>
+        {% endif %}
+    </ul>
+</div>

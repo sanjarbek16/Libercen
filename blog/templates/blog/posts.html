@@ -1,0 +1,40 @@
+{% load i18n %}
+
+	<div style="width:100%; max-width:1300px;" class="clearer">
+        {% for post in posts %}
+		{% if post.title %}
+		<div style="padding:2px;" class="a-list">
+		    <div style="width:100%;" class="w3-white custom-padding w3-left w3-border w3-border-grey">
+                <div class="a-img" style="float:left;">
+                <a href="{% url 'post' post.slug %}">
+                    <div style="width:100%; height:100%; position:absolute; background-image: url('/media/{{post.article_image}}'); background-position: center top; background-repeat: no-repeat; background-size:cover;">
+                    </div>
+                </a>
+                </div>
+
+                <div class="a-top">
+                    <div style="">
+                    <p class="a-title blue" style="margin-bottom:5px!important;"><a href="{% url 'post' post.slug %}"><b>{{ post.title }}</b></a></p>
+                    </div>
+                </div>
+                <div class="a-bottom">
+                    <div class="sub-a-bottom">
+                        <div class="a-bottom-element">
+                        <p class="title"><span class="fa fa-user"></span> <i>{{ post.author.first_name }} {{ post.author.last_name }}</i></p>
+                        </div>
+                    </div>
+                    <div class="title a-date">
+                        <span class="date">
+                        <span class="fa fa-calendar"></span>
+                            {{ post.create_date|date:"D d M Y" }}
+                        </span>
+                    </div>
+                </div>
+
+			</div>
+		</div>
+		{% endif %}
+        {% empty %}
+        <h1>Empty</h1>
+        {% endfor %}
+	</div>

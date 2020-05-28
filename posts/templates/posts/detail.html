@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<style>
+	.image {
+		position: absolute;
+		background-image: url('/media/{{post.user.profile.avatar}}');
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: cover;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+{% endblock head %}
+
+{% block content %}
+<div style="width:100%; max-width:800px; margin:0 auto; margin-top:20px;" class="w3-round border-all w3-white clearer">
+    <div class="post border-bottom" style="width:100%;">
+        <div class="clearer" style="padding:10px">
+            <div class="square w3-round" style="float:left; border: 1px solid grey; width:7%;">
+                <div style="float:left; background-image: url('{% if post.user.profile.avatar %}/media/{{post.user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
+            </div>
+            <div style="float:left; width:90%; margin-left:8px;">
+                <a href="/{{post.user.username}}" >{{ post.user.username }}</a>
+                <p>{{ post.post|safe|linebreaks}}</p>
+                <div class="clearer post-bottom">
+                    <ul class="w3-ul post-ul">
+                        <li post-id="{{post.pk}}" csrf="{{csrf_token}}" style="padding:0!important;">
+                            <div class="interaction">
+                                {% if request.user == post.user %}
+                                <a href="#deletePart{{post.pk}}"  class="w3-right" aria-controls="deletePart{{post.pk}}" data-toggle="collapse"><i style=" color:#3b5998;" class="fa fa-trash w3-xlarge"></i></a>
+                                {% endif %}
+                                {% if user in post.get_likers %}
+                                <a href="#" style="padding:0; box-shadow:none; width:25px; margin-right:0; font-size:17px; color:#e80435;" class="w3-xlarge w3-btn w3-white like unlike">
+                                    <i style=" color:#3b5998;" class="fa fa-thumbs-up"></i>
+                                </a>
+                                <span class="text"></span>
+                                <span class="small-size like-count">{{ post.likes }}</span><span class="small-size like-name"> like{{ post.likes|pluralize }}</span>
+                                {% else %}
+                                <a href="#" style="padding:0; width:25px; margin-right:0; box-shadow:none; font-size:17px; color:#e80435;" class="w3-xlarge w3-btn w3-white like">
+                                    <i style=" color:#3b5998;" class="fa fa-thumbs-o-up"></i>
+                                </a>
+                                <span class="text"></span>
+                                <span class="like-count small-size">{{ post.likes }}</span><span class="small-size like-name"> like{{ post.likes|pluralize }}</span>
+                                {% endif %}
+                                <button style="padding:0; box-shadow:none; width:25px; margin-right:0;" class="w3-btn w3-white comment">
+                                    <i style="color:#3b5998" class="fa fa-comment-o w3-xlarge"></i>
+                                </button>
+                                <span class="small-size">Comments</span>
+                                <span style="padding-left:3px;" class="small-size comment-count">0</span>
+                            </div>
+                            <div id="deletePart{{post.pk}}" class="collapse">
+                                <hr>
+                                <p style="margin-top:10px;"><strong>Are you sure you want to delete this post?</strong></p>
+                                <button  type="button" style="margin-right:7px;" class="w3-left w3-btn w3-round custom-red post-delete">Yes</button>
+                                <button type="button" class="w3-left w3-btn w3-round custom-green" data-target="#deletePart{{post.pk}}" aria-controls="deletePart{{post.pk}}" data-toggle="collapse">No</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block domready %}
+	$("ul.post-ul").on("click", ".like", function () {
+		var li = $(this).closest("li");
+		var post = $(li).attr("post-id");
+		var csrf = $(li).attr("csrf");
+		$.ajax({
+		  url: '/p/like/',
+		  data: {
+			'post': post,
+			'csrfmiddlewaretoken': csrf
+		  },
+		  type: 'post',
+		  cache: false,
+		  success: function (data) {
+			if ($(".like", li).hasClass("unlike")) {
+			  $(".like", li).removeClass("unlike");
+			  $(".like .fa", li).removeClass("fa-thumbs-up")
+			  $(".like .fa", li).addClass("fa-thumbs-o-up");
+			  $(".like .text", li).text("Like");
+			}
+			else {
+			  $(".like .fa", li).addClass("fa-thumbs-up");
+			  $(".like .fa", li).removeClass("fa-thumbs-o-up");
+			  $(".like", li).addClass("unlike");
+			  $(".like .text", li).text("Unlike");
+			}
+			$(".like-count", li).text(data);
+			$(".like .fa", li).addClass(data);
+			$(".like .fa", li).removeClass(data);
+		  }
+		});
+		return false;
+	  });
+
+	  $("ul.post-ul").on("click", ".post-delete", function () {
+		var li = $(this).closest("li");
+		var post = $(li).attr("post-id");
+		var csrf = $(li).attr("csrf");
+		var div = $(this).closest("div.post")
+		$.ajax({
+		  url: '/p/delete/',
+		  data: {
+			'post': post,
+			'csrfmiddlewaretoken': csrf
+		  },
+		  type: 'post',
+		  cache: false,
+		  success: function (data) {
+			$(div).fadeOut(400, function () {
+			  $(div).remove();
+			});
+		  }
+		});
+	  });
+{% endblock %}

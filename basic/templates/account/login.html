@@ -1,0 +1,54 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+{% load widget_tweaks %}
+
+
+{% block title %}{% trans "Sign In" %}{% endblock %}
+
+{% block head %}
+<style>
+    .form-control {
+        width:100%;
+    }
+    .social-li {
+        width: 100%;
+        padding-top: 5px;
+    }
+    .facebook {
+        background-color: #3f4e97!important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w3-white w3-round border-all" style="max-width:400px; margin:0 auto; width:100%; padding:15px; margin-top:30px; margin-bottom:200px;">
+
+    <h1>{% trans "Sign In" %}</h1>
+
+    <div class="social">
+        <ul style="list-style: none; margin-bottom: 20px;">
+            <li class="facebook social-li"><a class="socialaccount_provider" href="/accounts/facebook/login/?process=login">Login with Facebook</a></li>
+            <li class="google social-li"><a class="socialaccount_provider" href="/accounts/google/login/?process=login">Login with Twitter</a></li>
+        </ul>
+    </div>
+    {% if form.errors %}
+        <div class="alert alert-danger alert-dismissable">
+            <p>Your username and password didn't match. Please try again.</p>
+        </div>
+    {% endif %}
+
+    <form class="login" method="POST" action="{% url 'account_login' %}">
+        {% csrf_token %}
+        <p><input class="form-control" type="text" name="login" required id="id_login" placeholder="Username" maxlength="150" autofocus="autofocus" /></p>
+        <p><input class="form-control" type="password" name="password" required id="id_password" placeholder="Password" /></p>
+        <p><label for="id_remember">Remember Me:</label> <input style="margin-left:4px;" class="form-check-input" type="checkbox" name="remember" id="id_remember" /></p>
+        <p><a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a></p>
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+        <button class="primaryAction btn btn-primary" type="submit">{% trans "Sign In" %}</button>
+    </form>
+</div>
+{% endblock %}

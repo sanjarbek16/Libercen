@@ -1,0 +1,35 @@
+{% load i18n %}
+
+	<div style="width:100%; max-width:1300px;" class="clearer">
+        {% for book in books %}
+		<div style="padding:2px; margin-top:20px;" class="list">
+		    <div style="width:100%;" class="clearer w3-white w3-left border-all">
+                <div class="book-list" style="width:50%; float:left;">
+                    <a href="{% url 'book' book.slug %}">
+                        <div style="width:100%; height:100%; position:absolute; background-image: url('/media/{{book.cover}}'); background-position: center top; background-repeat: no-repeat; background-size:cover;">
+                        </div>
+                    </a>
+                </div>
+                <div style="margin-left:5px; padding:3px; float:left; width:48%;">
+                    <a href="{% url 'book' book.slug %}"><b>{{ book.name }}</b></a>
+                    <p><i>by {{ book.author }}</i></p>
+                    {% with total_users_liked=book.profile_set.count %}
+                        <span class="count">
+                        <span class="total">{{ total_users_liked }}</span>
+                            user{{ total_users_liked|pluralize }} liked
+                        </span>
+                        <button data-id="{{ book.id }}" data-action="{% if book in request.user.profile.fav_books.all %}un{% endif %}fav" style="color:white; font-size:12px;" class="w3-round w3-btn custom-{% if book in request.user.profile.fav_books.all %}red{% else %}green{% endif %} fav button">
+                        {% if book not in request.user.profile.fav_books.all %}
+                            Add to favourites
+                        {% else %}
+                            Remove from favourites
+                        {% endif %}
+                        </button>
+		            {% endwith %}
+                </div>
+			</div>
+		</div>
+        {% empty %}
+        <h1>Empty</h1>
+        {% endfor %}
+	</div>

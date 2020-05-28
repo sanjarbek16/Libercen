@@ -1,0 +1,320 @@
+@import url(bootstrap.min.css);
+@import url(https://fonts.googleapis.com/css?family=Montserrat|Raleway);
+
+body {
+	background-color:#eae8e8;
+	font-family: 'Montserrat', 'Raleway', sans-serif;
+	font-size: 14px;
+	width:100%;
+	margin: 0 auto;
+	overflow-y: scroll;
+}
+
+h1, h2, h3, h5, h6 {
+	
+	font-family: 'Montserrat', sans-serif;
+}
+ul { padding:0 } 
+/*--------------Main Navigation-----------*/
+.main-nav {
+	background-color: #3b5998;
+	width:100%;
+}
+.main-nav ul {
+	list-style: none;
+	padding-left:0px;
+	height:80px;
+	margin:0 auto;
+	text-align: left;
+	position: relative;
+	
+}
+.main-nav li img {
+	margin-top:5px;
+	
+}
+
+.main-nav a {
+	color:#fff;
+	font-size:12px;
+	box-sizing: border-box;
+	padding-bottom: 30px;
+	text-align: center;
+	text-decoration: none;
+	text-transform: uppercase;
+	position: absolute;
+	padding-top:10px;
+	height:80px;
+	
+}
+
+.main-nav .home {
+	height:80px;
+	width:200px;
+	float:left;
+	padding-left:20px;
+	
+	
+}
+
+.main-nav .settings-button {
+	background-image: url('/static/personal/icons/settings.png');
+	background-position: 0 10px;
+	background-repeat: no-repeat;
+	background-size: 47px;
+	margin-left: 900px;
+	width:47px;
+	
+	
+}
+
+#action-list {
+	background-color: #fff;
+	margin-left: 300px;
+	width: 500px;
+}
+
+.images {
+	margin-left: 60px;
+	
+}
+
+.main-nav li .home-button {
+	height: 80px;
+	background-position: 0 10px;
+	background-image: url('/static/icons/home2.png');
+	background-repeat: no-repeat;
+	background-size: 250px; 
+	width: 250px;
+	margin-left:60px;
+}
+
+.main-nav .search {
+	position: absolute;
+	height: 58px;
+	width:300px;
+	margin-left:500px;
+	padding-top:10px;
+}
+
+.main-nav .profile-button {
+	background-position: 0 10px;
+	background-image: url('/static/personal/icons/profile.png');
+	background-repeat: no-repeat;
+	background-size: 47px;
+	margin-left:1050px;
+	width:47px;
+}
+.main-nav .notification-button {
+	background-position: 0 10px;
+	background-image: url('/static/personal/icons/notification.png');
+	background-repeat: no-repeat;
+	background-size: 47px;
+	margin-left:980px;
+	width:60px;
+	
+}
+
+
+.right-side-elements div {
+	display:inline;
+	float:right;
+	position:relative;
+		
+
+	
+}
+
+/*--------Search-------*/
+.search input[type=text] {
+    width: 250px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    font-size: 16px;
+    background-color: white;
+    background-image: url('/static/personal/icons/searchicon1.png');
+    background-position: 5px 5px;
+    background-repeat: no-repeat;
+    padding: 12px 20px 12px 45px;
+    -webkit-transition: width 0.4s ease-in-out;
+    transition: width 0.4s ease-in-out;
+}
+
+.search input[type=text]:focus {
+    width: 300px;
+}
+
+/*---------Login-------*/
+
+.site-information h1 {
+	color: #fff;
+	
+}
+.login-form {
+	width: 290px;
+	height: 224px;
+	background-color: #fff;
+	border-radius: 6px;
+	
+	
+}
+.login-form .top-login {
+	margin-left: 10px;
+	padding-top: 10px;
+	
+	
+	
+}
+
+.login-form .top-login .social ul {
+	list-style: none;
+	position: relative;
+	
+}
+
+.social li a {
+	position: absolute;
+	width: 270px;
+	height: 30px;
+	border-radius: 5px;
+	color: #fff;
+	padding-left: 35px;
+	text-decoration: none;
+	
+}
+
+
+
+.form-control {
+	
+	width:270px;
+	
+}
+
+#login {
+	margin-top: -50px;
+	float:right;
+	position: relative;
+
+	
+	
+}
+
+.top-login #id_password {
+	width: 190px;
+	
+}
+
+.password-reset {
+	margin-top: -5px;
+	
+}
+.main-nav a {
+	color:#fff;
+	font-size:12px;
+	box-sizing: border-box;
+	padding-bottom: 30px;
+	text-align: center;
+	text-decoration: none;
+	text-transform: uppercase;
+	position: absolute;
+	width: 74px;
+	height:70px;
+	border-radius:15px;
+	
+}
+
+
+/*------Register menu------*/
+
+.register-form {
+	width: 290px;
+	background-color: #fff;
+	padding-top: 10px;
+	border-radius: 6px;
+	height: 300px;
+}
+
+.register-form .register {
+	
+	margin-left: 10px;
+	margin-bottom:-10px;
+	
+	
+}
+
+/*-------Footer------*/
+.footer {
+    justify-content: center;
+    margin: 0 auto;
+	max-width:550px;
+	padding-top:100px;
+	padding-bottom:70px;
+	bottom:0px;
+}
+.footer ul {
+	margin-left: 100px;
+	color: #fff;
+	list-style: none;
+	padding-left:0px;
+	margin:0 auto;
+	text-align: center;
+	position: relative;
+	
+}
+.footer li {
+	float:left;
+	margin-left: 20px;
+	
+}
+.f-sharedu {
+	font-size: 16px;
+	
+}
+.footer a {
+	color:#fff;
+	font-size:16px;
+	box-sizing: border-box;
+	text-align: center;
+	text-decoration: none;
+	
+}
+
+
+/*style="background-image: url('/static/personal/yellowstone.jpg'); background-repeat: no-repeat; background-size: 1400px;"---------Intro-------*/
+
+.introduction {
+	width: 400px;
+	float: left;
+	  background-color: #111;
+  color: #fff;
+  padding: 18px;
+  letter-spacing: 10px;
+}
+.introduction p {
+	margin-top: 20px;
+	font-size: 18px;
+	
+	
+}
+.main-page {
+	left: 0px;
+	bottom:0px;
+
+    right: 0px;
+    top: 0px;
+}
+.top-nav {
+	backface-visibility: hidden;
+    position: relative;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    z-index: 1000;
+    border-bottom: 1px solid 
+}
+
+
+
+

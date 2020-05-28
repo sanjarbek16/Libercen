@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Search{% endblock %}
+
+{% block head %}
+<style>
+.search-form ul {
+    list-style:none;
+}
+.form-control {
+    width:100%;
+}
+    .book-list {
+        position:relative;
+        width:100%;
+
+    }
+    .book-list:after {
+        content:"";
+        display:block;
+        padding-bottom:158%;
+
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="padding:0; min-height: 290px;" class="w3-white w3-round border-all custom-div search-form">
+    <p style="margin-top:15px;" class="w3-xlarge w3-center">Search</p>
+
+    <form class="search-form" method="get" action=".">
+        <div class="w3-padding">
+            {{ field.label_tag }}
+            {% render_field form.q class="form-control" placeholder="Type your search here..." %}
+            {% if field.help_text %}
+            <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+        </div>
+        <div class="w3-padding">
+            {{ field.label_tag }}
+            {% render_field form.models class="checkbox" %}
+            {% if field.help_text %}
+            <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+        </div>
+        <input style="margin-left:15px;" class="btn btn-primary" type="submit" value="Search">
+
+        {% if query %}
+            <p style="margin-top:10px;" class="border-bottom w3-center w3-xlarge">Results</p>
+
+            {% for result in page.object_list %}
+                {% if result.object.name %}
+                    <div class="border-bottom" style="width:100%;">
+                        <div class="clearer" style="padding:10px">
+                            <div class="w3-left book-list border-all" style="float:left; width:100px;">
+                                <div style="float:left; background-image: url('/media/{{  result.object.cover }}');" class="w3-round small-profile"></div>
+                            </div>
+                            <div class="w3-left" style="font-size:18px; float:left; margin-left:8px;">
+                                <a href="{{result.object.get_absolute_url}}" >{{ result.object.name }}</a>
+                            </div>
+                            <div class="w3-right" style="margin-top:13px;">
+                                {% with total_users_liked=result.object.profile_set.count %}
+                                    <span class="count">
+                                    <span class="total">{{ total_users_liked }}</span>
+                                        user{{ total_users_liked|pluralize }} liked
+                                    </span>
+                                    <button data-id="{{ result.object.id }}" data-action="{% if result.object in request.user.profile.fav_books.all %}un{% endif %}fav" style="color:white; font-size:12px;" class="w3-round w3-btn custom-{% if result.object in request.user.profile.fav_books.all %}red{% else %}green{% endif %} fav button">
+                                    {% if result.object not in request.user.profile.fav_books.all %}
+                                        Add to favourites
+                                    {% else %}
+                                        Remove from favourites
+                                    {% endif %}
+                                    </button>
+                                {% endwith %}
+                            </div>
+                        </div>
+                    </div>                    
+                {% else %}
+                    <div class="border-bottom" style="width:100%;">
+                        <div class="clearer" style="padding:10px">
+                            <div class="w3-left square border-all" style="border-radius: 50px; float:left; width:50px;">
+                                <div style="border-radius: 50px; float:left; background-image: url('{% if result.object.profile.avatar %}/media/{{result.object.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
+                            </div>
+                            <div class="w3-left" style="font-size:18px; float:left; margin-left:8px;">
+                                <a href="/{{result.object.username}}" >{{ result.object.username }}</a>
+                                <p>{{ result.object.first_name }} {{result.object.last_name}} </p>
+                            </div>
+                            {% if request.user == result.object %}
+                            {% else %}
+                            <div class="w3-right" style="margin-top:13px;">
+                                {% with total_followers=result.object.followers.count %}
+                                <a href="#" style="color:white; border-radius:5px; margin-left:4px; margin-bottom:11px;" data-id="{{ result.object.id }}" data-action="{% if request.user in result.object.followers.all %}un{% endif %}follow" class="w3-btn custom-{% if request.user in result.object.followers.all %}green{% else %}blue{% endif %} follow button">
+                                    {% if request.user not in result.objects.followers.all %}
+                                    Follow
+                                    {% else %}
+                                    Following
+                                    {% endif %}
+                                </a>
+                                {% endwith %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% empty %}
+                <p class="w3-padding"><b>No results</b>. Can't find a book you are looking for? <a href="/b/add/">Create</a> one.</p>
+            {% endfor %}
+
+            {% if page.has_previous or page.has_next %}
+                <div>
+                    {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+                    |
+                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            {# Show some example queries to run, maybe query syntax, something else? #}
+        {% endif %}
+    </form>
+
+</div>
+{% endblock %}
+
+{% block domready %}
+    $('a.follow').click(function(e){
+        e.preventDefault();
+        $.post('{% url "user_follow" %}',
+            {
+                id: $(this).data('id'),
+                action: $(this).data('action')
+            },
+            function(data){
+                if (data['status'] == 'ok') {
+                    var previous_action = $('a.follow').data('action');
+                    // toggle data-action
+                    $('a.follow').data('action',
+                    previous_action == 'follow' ? 'unfollow' : 'follow');
+                    // toggle link text
+                    $('a.follow').text(
+                    previous_action == 'follow' ? 'Following' : 'Follow');
+                    // update total followers
+                    var previous_followers = parseInt(
+                    $('span.count-followers .total').text());
+                    $('span.count-followers .total').text(previous_action == 'follow' ?
+                    previous_followers + 1 : previous_followers - 1);
+                }
+            }
+        );
+    });
+        $('button.fav').click(function(e){
+        e.preventDefault();
+        var div = $(this).closest("div");
+        $.post('{% url "add_fav" %}',
+            {
+                id: $(this).data('id'),
+                action: $(this).data('action')
+            },
+            function(data){
+                if (data['status'] == 'ok') {
+                    var previous_action = $('button.fav', div).data('action');
+                    // toggle data-action
+                    $('button.fav', div).data('action',
+                    previous_action == 'fav' ? 'unfav' : 'fav');
+                    // toggle link text
+                    $('button.fav', div).text(
+                    previous_action == 'fav' ? 'Remove from favourites' : 'Add to favourites');
+                    // update total followers
+                    var previous_favers = parseInt(
+                    $('span.count .total', div).text());
+                    $('span.count .total', div).text(previous_action == 'fav' ?
+                    previous_favers + 1 : previous_favers - 1);
+                    if (previous_action == 'fav') {
+                        $('button.fav', div).removeClass('custom-green');
+                        $('button.fav', div).addClass('custom-red');
+                    }
+                    else {
+                        $('button.fav', div).removeClass('custom-red');
+                        $('button.fav', div).addClass('custom-green');
+                    }
+
+                }
+            }
+        );
+    });
+{% endblock %}    
