@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'taggit_autosuggest',
     'rest_framework',
     'webpack_loader',
+    'dj_database_url',
     'django.contrib.humanize',
     'django.contrib.sites',
     'django.contrib.admin',
