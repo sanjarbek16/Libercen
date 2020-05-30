@@ -104,7 +104,7 @@ class Notification(models.Model):
     )
 
     _LIKED_TEMPLATE = u'<a href="/{0}/"><strong>{0}</strong></a> liked your post'
-    _IMAGE_LIKED_TEMPLATE = u'<a href="/{0}/"><strong>{0}</strong></a> liked your image <img src="/media/{1}/" style="float:right;" class="user-picture">'
+    _IMAGE_LIKED_TEMPLATE = u'<a href="/{0}/"><strong>{0}</strong></a> liked your image <img src="https://libercen.s3.amazonaws.com/{1}/" style="float:right;" class="user-picture">'
     _POST_LIKED_TEMPLATE = u'<a href="/{0}/"><strong>{0}</strong></a> liked your post <strong>{1}</p></strong>'
     _REVIEW_LIKED_TEMPLATE = u'<a href="/{0}/"><strong>{0}</strong></a> liked your review on book <strong>{1}</strong>'
     _COMMENTED_IMAGE_TEMPLATE = u'<a href="/{0}/"><strong>{0}</strong></a> commented on your image'

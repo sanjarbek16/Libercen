@@ -55,7 +55,7 @@
                     <div class="border-bottom" style="width:100%;">
                         <div class="clearer" style="padding:10px">
                             <div class="w3-left book-list border-all" style="float:left; width:100px;">
-                                <div style="float:left; background-image: url('/media/{{  result.object.cover }}');" class="w3-round small-profile"></div>
+                                <div style="float:left; background-image: url('https://libercen.s3.amazonaws.com/{{  result.object.cover }}');" class="w3-round small-profile"></div>
                             </div>
                             <div class="w3-left" style="font-size:18px; float:left; margin-left:8px;">
                                 <a href="{{result.object.get_absolute_url}}" >{{ result.object.name }}</a>
@@ -81,7 +81,7 @@
                     <div class="border-bottom" style="width:100%;">
                         <div class="clearer" style="padding:10px">
                             <div class="w3-left square border-all" style="border-radius: 50px; float:left; width:50px;">
-                                <div style="border-radius: 50px; float:left; background-image: url('{% if result.object.profile.avatar %}/media/{{result.object.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
+                                <div style="border-radius: 50px; float:left; background-image: url('{% if result.object.profile.avatar %}https://libercen.s3.amazonaws.com/{{result.object.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
                             </div>
                             <div class="w3-left" style="font-size:18px; float:left; margin-left:8px;">
                                 <a href="/{{result.object.username}}" >{{ result.object.username }}</a>

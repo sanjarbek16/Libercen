@@ -3,7 +3,7 @@
     <div class="border-bottom" style="width:100%;">
         <div class="clearer" style="padding:10px">
             <div class="w3-left square border-all" style="border-radius: 50px; float:left; width:50px;">
-                <div style="border-radius: 50px; float:left; background-image: url('{% if follower.profile.avatar %}/media/{{follower.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
+                <div style="border-radius: 50px; float:left; background-image: url('{% if follower.profile.avatar %}https://libercen.s3.amazonaws.com/{{follower.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
             </div>
             <div class="w3-left" style="font-size:18px; float:left; margin-left:8px; margin-top:8px;">
                 <a href="/{{follower.username}}" >{{ follower.username }}</a>

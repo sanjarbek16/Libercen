@@ -4,7 +4,7 @@
         <div class="post border-bottom" style="width:100%;">
             <div class="clearer" style="padding:10px">
                 <div class="square w3-round" style="float:left; border: 1px solid grey; width:7%;">
-                    <div style="float:left; background-image: url('{% if post.user.profile.avatar %}/media/{{post.user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="backg-image w3-round small-profile"></div>
+                    <div style="float:left; background-image: url('{% if post.user.profile.avatar %}https://libercen.s3.amazonaws.com/{{post.user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="backg-image w3-round small-profile"></div>
                 </div>
                 <div style="float:left; width:90%; margin-left:8px;">
                     <a href="/{{post.user.username}}" >{{ post.user.username }}</a>
@@ -63,7 +63,7 @@
                         <div class="clearer" comment-id="{{ comment.pk }}" csrf="{{ csrf_token }}">
                             <div style="padding:10px; float:left; width:97%;" class="clearer ">
                                 <div class="square w3-round" style="float:left; border: 1px solid grey; width:5%;">
-                                    <div style="float:left; background-image: url('{% if comment.user.profile.avatar %}/media/{{comment.user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
+                                    <div style="float:left; background-image: url('{% if comment.user.profile.avatar %}https://libercen.s3.amazonaws.com/{{comment.user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
                                 </div>
                                 <div class="w3-white" style="width:94%; padding:10px; float:right; border-radius:15px;">
                                     <p><a href="/{{comment.user.username}}/" >{{comment.user.username}} </a>{{ comment.comment }}</p>

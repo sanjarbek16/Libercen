@@ -42,7 +42,7 @@ padding-right:0px;
     }
     .image {
 		position: absolute;
-		background-image: url('/media/{{page_user.profile.avatar}}');
+		background-image: url('https://libercen.s3.amazonaws.com/{{page_user.profile.avatar}}');
 		background-position: center center;
 		background-repeat: no-repeat;
 		background-size: cover;
@@ -101,7 +101,7 @@ padding-right:0px;
 				    <div class="border-bottom" style="width:100%;">
 				        <div class="clearer" style="padding:10px">
 				            <div class="square w3-left border-all" style="border-radius: 50px; float:left; width:50px;">
-				                <div style="border-radius: 50px; float:left; background-image: url('{% if user.profile.avatar %}/media/{{user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
+				                <div style="border-radius: 50px; float:left; background-image: url('{% if user.profile.avatar %}https://libercen.s3.amazonaws.com/{{user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
 				            </div>
 				            <div class="w3-left" style="font-size:18px; margin-top:8px; float:left; margin-left:8px;">
 				                <a href="/{{user.username}}" >{{ user.username }}</a>

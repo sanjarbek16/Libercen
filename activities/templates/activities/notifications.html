@@ -18,7 +18,7 @@
     <ul class="w3-white all-notifications">
       {% for notification in notifications %}
         <li class="clearfix">
-          <a href="{% url 'profile' notification.from_user.username %}"><img src="{% if notification.from_user.profile.avatar %}/media/{{notification.from_user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}" class="user-picture"></a>
+          <a href="{% url 'profile' notification.from_user.username %}"><img src="{% if notification.from_user.profile.avatar %}https://libercen.s3.amazonaws.com/{{notification.from_user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}" class="user-picture"></a>
           <div>
             <small>{{ notification.date|naturaltime }}</small>
             <p>{{ notification|safe|linebreaks }}</p>

@@ -352,7 +352,7 @@
         <a style="color:white; font-size:30px;" class="nav-link" href="#" id="notifications" data-container="body" data-toggle="popover" data-placement="bottom" title="Notifications"><i class="fa fa-bell-o"></i></a>
         <a class="border-all w3-round" style="width:45px; height:45px; margin-right:45px;" href="#" id="userMenu" data-container="body" data-toggle="popover" data-placement="bottom" title="{{ request.user.profile.get_screen_name }}">
             <div class="square w3-round">
-                <div class="w3-round backg-image {% if request.user.profile.avatar %}" style="position:absolute; background-image: url('/media/{{request.user.profile.avatar}}');"{% else %}no-image"{%endif%}>
+                <div class="w3-round backg-image {% if request.user.profile.avatar %}" style="position:absolute; background-image: url('https://libercen.s3.amazonaws.com/{{request.user.profile.avatar}}');"{% else %}no-image"{%endif%}>
             </div>
             </div>
         </a>

@@ -301,4 +301,4 @@ if DEBUG==False:
 else:
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
     SECURE_SSL_REDIRECT = False
-MEDIA_URL = '/media/'
+MEDIA_URL = 'https://libercen.s3.amazonaws.com/'

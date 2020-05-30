@@ -14,7 +14,7 @@
                 {% if action.target.user.profile.avatar %}
                 <div style="width:50px;">
                     <div class="square" style="margin-right: 13px; margin-top: -7px; margin-bottom: 8px; float:left;">
-                        <div class="small-profile border" style="border-radius:100px; background-image:url('/media/{{action.target.user.profile.avatar}}');">
+                        <div class="small-profile border" style="border-radius:100px; background-image:url('https://libercen.s3.amazonaws.com/{{action.target.user.profile.avatar}}');">
                         </div>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                     <div style="width:100%;" class="clearer w3-white w3-left border-all">
                         <div class="book-list" style="width:50%; float:left;">
                             <a href="{% url 'book' book.slug %}">
-                                <div style="width:100%; height:100%; position:absolute; background-image: url('/media/{{book.cover}}'); background-position: center top; background-repeat: no-repeat; background-size:cover;">
+                                <div style="width:100%; height:100%; position:absolute; background-image: url('https://libercen.s3.amazonaws.com/{{book.cover}}'); background-position: center top; background-repeat: no-repeat; background-size:cover;">
                                 </div>
                             </a>
                         </div>
@@ -100,7 +100,7 @@
                             <div style="width:100%;" class="clearer w3-white w3-left border-all">
                                 <div class="book-list" style="width:50%; float:left;">
                                     <a href="{% url 'book' book.slug %}">
-                                        <div style="width:100%; height:100%; position:absolute; background-image: url('/media/{{book.cover}}'); background-position: center top; background-repeat: no-repeat; background-size:cover;">
+                                        <div style="width:100%; height:100%; position:absolute; background-image: url('https://libercen.s3.amazonaws.com/{{book.cover}}'); background-position: center top; background-repeat: no-repeat; background-size:cover;">
                                         </div>
                                     </a>
                                 </div>
@@ -174,7 +174,7 @@
                             <div class="clearer" comment-id="{{ comment.pk }}" csrf="{{ csrf_token }}">
                                 <div style="padding:10px; float:left; width:97%;" class="clearer ">
                                     <div class="square w3-round" style="float:left; border: 1px solid grey; width:5%;">
-                                        <div style="float:left; background-image: url('{% if comment.user.profile.avatar %}/media/{{comment.user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
+                                        <div style="float:left; background-image: url('{% if comment.user.profile.avatar %}https://libercen.s3.amazonaws.com/{{comment.user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
                                     </div>
                                     <div class="w3-white" style="width:94%; padding:10px; float:right; border-radius:15px;">
                                         <p><a href="/{{comment.user.username}}/" >{{comment.user.username}} </a>{{ comment.comment }}</p>
@@ -208,7 +208,7 @@
                             <div class="clearer" comment-id="{{ comment.pk }}" csrf="{{ csrf_token }}">
                                 <div style="padding:10px; float:left; width:97%;" class="clearer ">
                                     <div class="square w3-round" style="float:left; border: 1px solid grey; width:5%;">
-                                        <div style="float:left; background-image: url('{% if comment.user.profile.avatar %}/media/{{comment.user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
+                                        <div style="float:left; background-image: url('{% if comment.user.profile.avatar %}https://libercen.s3.amazonaws.com/{{comment.user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
                                     </div>
                                     <div class="w3-white" style="width:94%; padding:10px; float:right; border-radius:15px;">
                                         <p><a href="/{{comment.user.username}}/" >{{comment.user.username}} </a>{{ comment.comment }}</p>

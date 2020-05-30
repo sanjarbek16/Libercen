@@ -17,7 +17,7 @@
 
 	.image {
 		position: absolute;
-		background-image: url('/media/{{page_user.profile.avatar}}');
+		background-image: url('https://libercen.s3.amazonaws.com/{{page_user.profile.avatar}}');
 		background-position: center center;
 		background-repeat: no-repeat;
 		background-size: cover; 
@@ -68,7 +68,7 @@
 
 	{% if page_user.profile.back_image %}
 	.avatar:before {
-  		background-image: url('/media/{{page_user.profile.back_image}}');
+  		background-image: url('https://libercen.s3.amazonaws.com/{{page_user.profile.back_image}}');
   		min-height: 100%;
   		padding: 30%;
         width: 100%;

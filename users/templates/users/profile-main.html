@@ -30,7 +30,7 @@
 
 	.image {
 		position: absolute;
-		background-image: url('/media/{{page_user.profile.avatar}}');
+		background-image: url('https://libercen.s3.amazonaws.com/{{page_user.profile.avatar}}');
 		background-position: center center;
 		background-repeat: no-repeat;
 		background-size: cover; 
@@ -89,7 +89,7 @@
 
 	{% if page_user.profile.back_image %}
 	.avatar:before {
-  		background-image: url('/media/{{page_user.profile.back_image}}');
+  		background-image: url('https://libercen.s3.amazonaws.com/{{page_user.profile.back_image}}');
   		min-height: 100%;
   		padding: 30%;
         width: 100%;
@@ -260,7 +260,7 @@
 				<div class="bg-white swiper-container border-bottom">
 					<div class="swiper-wrapper">
 						{% for book in books %}
-						<a class="swiper-slide border" href="{% url 'book' book.slug %}" style="background-image:url('/media/{{book.cover}}')"></a>
+						<a class="swiper-slide border" href="{% url 'book' book.slug %}" style="background-image:url('https://libercen.s3.amazonaws.com/{{book.cover}}')"></a>
 						{% endfor %}
 					</div>
 				</div>

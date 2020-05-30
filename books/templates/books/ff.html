@@ -1,7 +1,7 @@
         '<div class="review border-bottom" style="width:100%;">
             <div class="clearer" style="padding:10px">
                 <div class="square w3-round" style="float:left; border: 1px solid grey; width:7%;">
-                    <div style="float:left; background-image: url('{% if review.user.profile.avatar %}/media/{{review.user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
+                    <div style="float:left; background-image: url('{% if review.user.profile.avatar %}https://libercen.s3.amazonaws.com/{{review.user.profile.avatar}}{% else %}/static/icons/no-image.jpg{% endif %}');" class="w3-round small-profile"></div>
                 </div>
                 <div style="float:left; width:90%; margin-left:8px;">
                     <a href="/{{' + json.username + '}}" >{{' + json.username + '}}</a>
