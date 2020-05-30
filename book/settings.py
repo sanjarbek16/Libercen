@@ -96,12 +96,19 @@ WSGI_APPLICATION = 'book.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
-
-DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL')
-    )
-}
+if DEBUG==False:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=config('DATABASE_URL')
+        )
+    }
+else:
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+    }
 
 
 REST_FRAMEWORK = {
@@ -279,14 +286,19 @@ LOGGING = {
     }
 }
 
-DEBUG_PROPAGATE_EXCEPTIONS = True
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
-AWS_QUERYSTRING_AUTH = False
-AWS_S3_CUSTOM_DOMAIN = config('AWS_S3_CUSTOM_DOMAIN')
-MEDIA_ROOT = config('MEDIA_ROOT')
+DEBUG_PROPAGATE_EXCEPTIONS = True
+if DEBUG==False:
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+    AWS_QUERYSTRING_AUTH = False
+    AWS_S3_CUSTOM_DOMAIN = config('AWS_S3_CUSTOM_DOMAIN')
+    MEDIA_ROOT = config('MEDIA_ROOT')
+    SECURE_SSL_REDIRECT = True
+else:
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    SECURE_SSL_REDIRECT = False
 MEDIA_URL = '/media/'
