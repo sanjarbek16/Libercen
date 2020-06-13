@@ -286,7 +286,6 @@ LOGGING = {
     }
 }
 
-SECURE_SSL_REDIRECT = False
 
 DEBUG_PROPAGATE_EXCEPTIONS = True
 if DEBUG==False:

@@ -11,10 +11,10 @@ body {
 }
 
 h1, h2, h3, h5, h6 {
-	
+
 	font-family: 'Montserrat', sans-serif;
 }
-ul { padding:0 } 
+ul { padding:0 }
 /*--------------Main Navigation-----------*/
 .main-nav {
 	background-color: #3b5998;
@@ -27,11 +27,11 @@ ul { padding:0 }
 	margin:0 auto;
 	text-align: left;
 	position: relative;
-	
+
 }
 .main-nav li img {
 	margin-top:5px;
-	
+
 }
 
 .main-nav a {
@@ -45,7 +45,7 @@ ul { padding:0 }
 	position: absolute;
 	padding-top:10px;
 	height:80px;
-	
+
 }
 
 .main-nav .home {
@@ -53,8 +53,8 @@ ul { padding:0 }
 	width:200px;
 	float:left;
 	padding-left:20px;
-	
-	
+
+
 }
 
 .main-nav .settings-button {
@@ -64,8 +64,8 @@ ul { padding:0 }
 	background-size: 47px;
 	margin-left: 900px;
 	width:47px;
-	
-	
+
+
 }
 
 #action-list {
@@ -76,7 +76,7 @@ ul { padding:0 }
 
 .images {
 	margin-left: 60px;
-	
+
 }
 
 .main-nav li .home-button {
@@ -84,7 +84,7 @@ ul { padding:0 }
 	background-position: 0 10px;
 	background-image: url('/static/icons/home2.png');
 	background-repeat: no-repeat;
-	background-size: 250px; 
+	background-size: 250px;
 	width: 250px;
 	margin-left:60px;
 }
@@ -112,7 +112,7 @@ ul { padding:0 }
 	background-size: 47px;
 	margin-left:980px;
 	width:60px;
-	
+
 }
 
 
@@ -120,9 +120,9 @@ ul { padding:0 }
 	display:inline;
 	float:right;
 	position:relative;
-		
 
-	
+
+
 }
 
 /*--------Search-------*/
@@ -149,28 +149,24 @@ ul { padding:0 }
 
 .site-information h1 {
 	color: #fff;
-	
+
 }
 .login-form {
 	width: 290px;
-	height: 224px;
+	height: 183px;
 	background-color: #fff;
 	border-radius: 6px;
-	
-	
+
+
 }
 .login-form .top-login {
 	margin-left: 10px;
-	padding-top: 10px;
-	
-	
-	
 }
 
 .login-form .top-login .social ul {
 	list-style: none;
 	position: relative;
-	
+
 }
 
 .social li a {
@@ -181,15 +177,15 @@ ul { padding:0 }
 	color: #fff;
 	padding-left: 35px;
 	text-decoration: none;
-	
+
 }
 
 
 
 .form-control {
-	
+
 	width:270px;
-	
+
 }
 
 #login {
@@ -197,18 +193,18 @@ ul { padding:0 }
 	float:right;
 	position: relative;
 
-	
-	
+
+
 }
 
 .top-login #id_password {
 	width: 190px;
-	
+
 }
 
 .password-reset {
 	margin-top: -5px;
-	
+
 }
 .main-nav a {
 	color:#fff;
@@ -222,7 +218,7 @@ ul { padding:0 }
 	width: 74px;
 	height:70px;
 	border-radius:15px;
-	
+
 }
 
 
@@ -237,11 +233,11 @@ ul { padding:0 }
 }
 
 .register-form .register {
-	
+
 	margin-left: 10px;
 	margin-bottom:-10px;
-	
-	
+
+
 }
 
 /*-------Footer------*/
@@ -261,16 +257,16 @@ ul { padding:0 }
 	margin:0 auto;
 	text-align: center;
 	position: relative;
-	
+
 }
 .footer li {
 	float:left;
 	margin-left: 20px;
-	
+
 }
 .f-sharedu {
 	font-size: 16px;
-	
+
 }
 .footer a {
 	color:#fff;
@@ -278,7 +274,7 @@ ul { padding:0 }
 	box-sizing: border-box;
 	text-align: center;
 	text-decoration: none;
-	
+
 }
 
 
@@ -295,8 +291,8 @@ ul { padding:0 }
 .introduction p {
 	margin-top: 20px;
 	font-size: 18px;
-	
-	
+
+
 }
 .main-page {
 	left: 0px;
@@ -312,9 +308,5 @@ ul { padding:0 }
     right: 0px;
     left: 0px;
     z-index: 1000;
-    border-bottom: 1px solid 
+    border-bottom: 1px solid
 }
-
-
-
-
