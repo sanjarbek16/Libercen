@@ -84,6 +84,20 @@ h3 {
   .intro p {
     font-size: 18px;
   }
+
+  .content {
+    padding-top: 40px;
+    margin: 0 auto;
+    max-width: 1250px;
+  }
+  .register-form {
+    margin-top: 10px;
+  }
+  .intro {
+    margin-top:100px;
+    color:#fff;
+    background-color:#111;
+  }
 </style>
 
 
@@ -94,8 +108,8 @@ h3 {
 
 <div class="bgimg-1">
 	<div>
-		<div  style="padding-top:40px;" class="w3-row content w3-container">
-			<div style="margin-top:100px; color:#fff; background-color:#111;" class="intro half w3-container">
+		<div  class="w3-row content w3-container">
+			<div class="intro half w3-container">
 				<h1>Welcome to Libercen</h1>
 				<p>
 				Get the chance to read more about your favourite character and book!
@@ -125,7 +139,7 @@ h3 {
 
 				</div>
 			</div>
-			<div style="margin-top:10px;" class="w3-right register-form">
+			<div class="w3-right register-form">
 				<form class="register" id="signup_form" method="post" action="/accounts/signup/">
 					<p><strong>First time on Libercen?</strong> Sign up</p>
                     <p><input class="form-control" placeholder="Username" type="text" name="username" id="id_username" minlength="1" autofocus="autofocus" required maxlength="150" /></p>
