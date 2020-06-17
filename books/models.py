@@ -24,7 +24,7 @@ def upload_to(instance, filename):
 class Book(models.Model):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, blank=True, null=True)
-    first_published = models.DateField()
+    first_published = models.DateField(blank=True, null=True)
     publisher = models.CharField(max_length=200, blank=True, null=True)
     ISBN = models.CharField(max_length=50, blank=True, null=True)
     edition = models.CharField(max_length=100, blank=True, null=True)

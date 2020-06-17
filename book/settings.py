@@ -181,12 +181,12 @@ COMPRESS_ENABLED = os.environ.get('COMPRESS_ENABLED', False)
 LOGIN_REDIRECT_URL = '/' #the page where user will be redirected after successfull login
 
 
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'libercen_app'
-EMAIL_HOST_PASSWORD = 'sanjarbek123'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'noreply@libercen.com'
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
 
 CKEDITOR_JQUERY_URL = 'http://libs.baidu.com/jquery/2.0.3/jquery.min.js'
